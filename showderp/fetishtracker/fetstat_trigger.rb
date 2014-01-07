@@ -16,7 +16,7 @@ end
 Trigger.new do |t|
   t[:id] = 'fetstat'
   t[:lastused] = Time.now
-  t[:cooldown] = 10 # seconds
+  t[:cooldown] = 5 # seconds
 
   t.match { |info|
     # checks
@@ -28,6 +28,9 @@ Trigger.new do |t|
 
   t.act { |info|
     # if those checks pass
+    t[:lastused] + t[:cooldown] < Time.now or next
+    
+    t[:lastused] = Time.now
     
     if info[:where] == 'c' && !(info[:all][2][0] == '#' || info[:all][2][0] == '@' || info[:all][2][0] == '%' || info[:all][2][0] == '+')
       info[:respond].call('To broadcast the full results of this command in a room you must be a voice or higher.')
