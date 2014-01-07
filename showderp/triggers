@@ -9,3 +9,4 @@ autoban/unban_trigger.rb
 autoban/autoban_join_trigger.rb
 anonmessage/anonmessage_trigger.rb
 fetishtracker/fetish_trigger.rb
+fetishtracker/fetstat_trigger.rb
