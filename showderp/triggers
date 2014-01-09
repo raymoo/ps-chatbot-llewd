@@ -10,3 +10,7 @@ autoban/autoban_join_trigger.rb
 anonmessage/anonmessage_trigger.rb
 fetishtracker/fetish_trigger.rb
 fetishtracker/fetstat_trigger.rb
+bread/battle_reporter_trigger.rb
+bread/bread_trigger.rb
+bread/champ_trigger.rb
+autoban/viewbanlist_trigger.rb
