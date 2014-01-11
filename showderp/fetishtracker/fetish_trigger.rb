@@ -52,8 +52,9 @@ Trigger.new do |t|
   }
   
   fetishstatspath = './showderp/fetishtracker/stats'
-  fetishes = File.read('./showderp/fetishtracker/list').split(' ')
   t.act { |info|
+    
+    fetishes = File.read('./showderp/fetishtracker/list').split(' ')
     # if those checks pass
     args = info[:result].split(' ')
 

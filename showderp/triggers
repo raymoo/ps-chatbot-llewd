@@ -14,3 +14,4 @@ bread/battle_reporter_trigger.rb
 bread/bread_trigger.rb
 bread/champ_trigger.rb
 autoban/viewbanlist_trigger.rb
+jak/jak_trigger.rb
