@@ -1,26 +1,26 @@
 Trigger.new do |t|
   t[:lastused] = Time.now
-  # t[:cooldown] = 3 # seconds
+  t[:cooldown] = 60 # seconds
   t[:saocounter] ||= 0
+  # t[:narutocounter] ||= 0
 
   t.match { |info|
-    # puts "#{info[:where]}, #{info[:who]}, #{info[:what]}"
-
-    info[:where] == 'c' &&
-    info[:what].scan(/\bsao\b/i).any? &&
-    info[:who].downcase != "gamecorner"
     # info[:what].scan(/\bnaruto\b/i))
+    info[:print] = info[:where] == 'c' && info[:what][0] == '!' && info[:what].scan(/counter/i).any?
+    counter = info[:where] == 'c' && info[:what].scan(/(\bSword\sArt\sOnline\b|\bSAO\b)/i).any? && info[:who].downcase != "gamecorner"
+    
+    info[:print] || counter
   }
   
   t.act { |info|
-    # t[:lastused] + t[:cooldown] < Time.now or next
-    # t[:lastused] = Time.now
-    t[:saocounter] += info[:what].scan(/\bsao\b/i).length
-    # info[:narutocounter] ||= 0
-    # info[:narutocounter] += info[:what].scan(/\bnaruto\b/i).length
+    t[:saocounter] += info[:what].scan(/(\bSword\sArt\sOnline\b|\bSAO\b)/i).length
+    # t[:narutocounter] += info[:what].scan(/\bnaruto\b/i).length
 
     result = "SAO counter: #{t[:saocounter].to_s}" # Naruto counter: #{info[:narutocounter]}. 
     puts result
-    info[:respond].call(result)
+    if info[:print] && t[:lastused] + t[:cooldown] < Time.now
+      info[:respond].call(result)
+      t[:lastused] = Time.now
+    end
   }
 end
