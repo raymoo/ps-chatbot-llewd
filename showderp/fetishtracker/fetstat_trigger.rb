@@ -47,7 +47,7 @@ Trigger.new do |t|
     end
 
     if !fetishes.include?(args[0])
-      info[:respond].call('#{args[0]} is not a valid id')
+      info[:respond].call("#{args[0]} is not a valid id")
       next
     end
     
