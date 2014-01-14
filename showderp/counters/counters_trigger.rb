@@ -1,8 +1,12 @@
 Trigger.new do |t|
   t[:lastused] = Time.now
   t[:cooldown] = 60 # seconds
-  t[:saocounter] ||= 0
-  # t[:narutocounter] ||= 0
+  t[:sao] ||= 0
+  # t[:naruto] ||= 0
+  # t[:souleater]
+  # t[:attackontitan]
+  # t[:dragonball]
+  # t[:deathnote]
 
   t.match { |info|
     # info[:what].scan(/\bnaruto\b/i))
@@ -13,10 +17,10 @@ Trigger.new do |t|
   }
   
   t.act { |info|
-    t[:saocounter] += info[:what].scan(/(\bSword\sArt\sOnline\b|\bSAO\b)/i).length
-    # t[:narutocounter] += info[:what].scan(/\bnaruto\b/i).length
+    t[:sao] += info[:what].scan(/(\bSword\sArt\sOnline\b|\bSAO\b)/i).length
+    # t[:naruto] += info[:what].scan(/\bnaruto\b/i).length
 
-    result = "SAO counter: #{t[:saocounter].to_s}" # Naruto counter: #{info[:narutocounter]}. 
+    result = "SAO counter: #{t[:sao]}" # Naruto counter: #{info[:naruto]}. 
     puts result
     if info[:print] && t[:lastused] + t[:cooldown] < Time.now
       info[:respond].call(result)
