@@ -16,7 +16,7 @@ Trigger.new do |t|
   op_reg = /\bone\spiece\b/i
 
   t.match do |info|
-    info[:print] = info[:where] == 'c' && info[:what][0] == '!' && info[:what].scan(/counter/i).any?
+    info[:print] = info[:where] == 'c' && info[:what] == '!counter'
 
     counter = info[:where] == 'c' && info[:what].scan(sao_reg).any? && info[:who].downcase != "gamecorner"
     counter ||= info[:where] == 'c' && info[:what].scan(db_reg).any? && info[:who].downcase != "gamecorner"
