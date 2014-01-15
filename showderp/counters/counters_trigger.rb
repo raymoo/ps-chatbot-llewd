@@ -7,6 +7,7 @@ Trigger.new do |t|
   t[:fairytail] ||= 0
   t[:attackontitan] ||= 0
   t[:onepiece] ||= 0
+  t[:id] = "counter"
 
   sao_reg = /(\bSword\sArt\sOnline\b|\bSAO\b)/i
   db_reg = /(\bdragon\sball\b|\bdbz\b)/i
