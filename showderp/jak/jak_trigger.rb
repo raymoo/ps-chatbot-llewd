@@ -4,7 +4,8 @@ Trigger.new do |t|
   t[:lastused] = Time.now - t[:cooldown]
   
   t.match { |info|
-    info[:what][0..3].downcase == '!jak'
+    info[:what][0..3].downcase == '!jak' &&
+    (info[:where] == 'pm' || info[:room] == 'showderp')
   }
   
   t.act do |info|
