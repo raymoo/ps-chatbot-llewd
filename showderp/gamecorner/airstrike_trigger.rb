@@ -1,4 +1,5 @@
 Trigger.new do |t|
+  t[:id] = "shank"
   t[:lastused] = Time.now
   t[:cooldown] = 5 # seconds
   t[:killcount] = {}
