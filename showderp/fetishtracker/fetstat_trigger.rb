@@ -30,9 +30,8 @@ Trigger.new do |t|
     # if those checks pass
     args = info[:result].split(' ')
     fetishes = File.read('./showderp/fetishtracker/list').split(' ')
-    t[:lastused] + t[:cooldown] < Time.now or next
+    info[:where] == "pm" or (info[:where] == "c" and t[:lastused] + t[:cooldown] < Time.now and t[:lastused] = Time.now) or next
     
-    t[:lastused] = Time.now
     
     if info[:where] == 'c' && !(info[:all][2][0] == '#' || info[:all][2][0] == '@' || info[:all][2][0] == '%')
       info[:respond].call('To broadcast the full results of this command in a room you must be a driver or higher. Try pming')

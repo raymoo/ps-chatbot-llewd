@@ -51,8 +51,15 @@ Trigger.new do |t|
     info[:what][7..-1].strip
   }
   
+
   fetishstatspath = './showderp/fetishtracker/stats'
   t.act { |info|
+
+    if info[:where] == 'c' && !(info[:all][2][0] == '#' || info[:all][2][0] == '@' || info[:all][2][0] == '%')
+      info[:respond].call('To broadcast the full results of this command in a room you must be a driver or higher. Try pming')
+      next
+    end 
+
     
     fetishes = File.read('./showderp/fetishtracker/list').split(' ')
     # if those checks pass
