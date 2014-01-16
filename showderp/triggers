@@ -17,4 +17,5 @@ bread/champ_trigger.rb
 bread/afd_trigger.rb
 autoban/viewbanlist_trigger.rb
 jak/jak_trigger.rb
-counters/counters_trigger.rb
+gamecorner/counters_trigger.rb
+gamecorner/airstrike_trigger.rb
