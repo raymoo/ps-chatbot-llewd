@@ -38,12 +38,8 @@ Trigger.new do |t|
     t[:onepiece] += info[:what].scan(op_reg).length
 
     result = "(Newpleb Counter Results) SAO: #{t[:sao]}, Dragon Ball: #{t[:dragonball]}, Naruto: #{t[:naruto]}, AoT: #{t[:attackontitan]}, Fairy Tail: #{t[:fairytail]}, One Piece: #{t[:onepiece]}"
-    puts result
-    puts Time.now - t[:lastused]
-    puts (Time.now - t[:lastused] > t[:cooldown])
     if info[:print] and (Time.now - t[:lastused] > t[:cooldown])
       info[:respond].call(result)
-      puts "Message sent to chatroom."
       t[:lastused] = Time.now
     end
   end
