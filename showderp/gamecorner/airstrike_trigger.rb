@@ -29,6 +29,9 @@ Trigger.new do |t|
   end
   
   t.act do |info|
+    killstrings = File.read('./showderp/gamecorner/list').split("\n")
+
+
     # Wait for cooldown
     if Time.now - t[:lastused] > t[:cooldown]
       # Kill someone
@@ -36,9 +39,10 @@ Trigger.new do |t|
         who = CBUtils.condense_name(info[:kill])
         t[:killcount][who] ||= 0
         t[:killcount][who] += 1
-        method = t[:killstrings].keys.sample
-        result = t[:killstrings][method]
-        info[:respond].call("#{info[:who]} #{method} #{info[:kill]} #{result}")
+        result = killstrings.sample
+        result["::killer::"] = info[:who]
+        result["::killee::"] = info[:kill]
+        info[:respond].call(result)
       end
 
       if info[:airstrike]
