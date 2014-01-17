@@ -44,7 +44,9 @@ end
 Trigger.new do |t|
 
   t[:id] = 'fetish'
-
+  t[:lastused] = Time.now
+  t[:cooldown] = 5 # seconds
+  
   t.match { |info|
     # checks
     info[:what][0..6] == '!fetish' &&
@@ -54,6 +56,8 @@ Trigger.new do |t|
 
   fetishstatspath = './showderp/fetishtracker/stats'
   t.act { |info|
+
+    info[:where] == "pm" or (info[:where] == "c" and t[:lastused] + t[:cooldown] < Time.now and t[:lastused] = Time.now) or next
 
     if info[:where] == 'c' && !(info[:all][2][0] == '#' || info[:all][2][0] == '@' || info[:all][2][0] == '%')
       info[:respond].call('To broadcast the full results of this command in a room you must be a driver or higher. Try pming')
