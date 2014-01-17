@@ -48,7 +48,7 @@ Trigger.new do |t|
   t.match { |info|
     # checks
     info[:what][0..6] == '!fetish' &&
-    info[:what][7..-1].strip
+    info[:what][8..-1].strip
   }
   
 

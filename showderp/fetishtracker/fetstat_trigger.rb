@@ -21,7 +21,7 @@ Trigger.new do |t|
   t.match { |info|
     # checks
     info[:what][0..7] == '!fetstat' &&
-    info[:what][8..-1].strip
+    info[:what][9..-1].strip
   }
   
   fetishstatspath = './showderp/fetishtracker/stats'
@@ -38,7 +38,8 @@ Trigger.new do |t|
       next
     end 
 
-    if args.count < 1
+    if args.count < 1 || args[0] == "help" || args[0] == 
+"info"
       result = 'Type "!fetstat <fetishid>" to view stats for a fetish. Available fetish ids are: '
       result += fetishes.join(', ')
       info[:respond].call(result)
