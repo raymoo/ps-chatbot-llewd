@@ -3,23 +3,6 @@ Trigger.new do |t|
   t[:lastused] = Time.now
   t[:cooldown] = 5 # seconds
   t[:killcount] = {}
-  t[:killstrings] = {
-    "shanked" => "with a sharpened katakana.",
-    "left" => "in the ocean to sleep with the fishes.",
-    "blew" => "to bits.",
-    "fed" => "to a hungry carnivorous dinosaur.",
-    "turned" => "into Swiss cheese with a machine-pistol.",
-    "sent" => "on a one-way trip to the graveyard.",
-    "destroyed" => "once and for all.",
-    "backed over" => "with a large truck.",
-    "killed" => "dead.",
-    "used Splash on" => "with fatal results.",
-    "murdered" => "in cold blood.",
-    "decapitated" => "with a dull spoon.",
-    "sliced" => "into pieces with a lightsaber.",
-    "melted" => "into slag somehow.",
-    "treated" => "to a relaxing spa treatment in a vat of acid."
-  }
 
   t.match do |info|
     info[:kill] = info[:what] =~ /\A!shank ([^,]+)\z/ && $1
