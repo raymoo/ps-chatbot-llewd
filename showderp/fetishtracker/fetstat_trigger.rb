@@ -21,7 +21,7 @@ Trigger.new do |t|
   t.match { |info|
     # checks
     info[:what][0..7] == '!fetstat' &&
-    info[:what][9..-1].strip
+    info[:what][8..-1].strip
   }
   
   fetishstatspath = './showderp/fetishtracker/stats'
