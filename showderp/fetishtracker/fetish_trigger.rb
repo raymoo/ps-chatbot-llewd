@@ -64,9 +64,11 @@ Trigger.new do |t|
       next
     end 
 
+
     
     fetishes = File.read('./showderp/fetishtracker/list').split(' ')
     # if those checks pass
+    
     args = info[:result].split(' ')
 
     if args.count != 2
@@ -85,7 +87,7 @@ Trigger.new do |t|
       info[:respond].call('The acceptance level must be an integer from 0-4.')
     elsif !fetishes.include?(args[0])
       
-      info[:respond].call('The fetish id must be one in the list')
+      info[:respond].call('The fetish id must be one in the list. Type !fetish for a list.')
     elsif info[:where] == 'c'
     
       info[:respond].call('Please pm your entries to me')

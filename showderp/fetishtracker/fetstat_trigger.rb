@@ -29,6 +29,7 @@ Trigger.new do |t|
   t.act { |info|
     # if those checks pass
     args = info[:result].split(' ')
+
     fetishes = File.read('./showderp/fetishtracker/list').split(' ')
     info[:where] == "pm" or (info[:where] == "c" and t[:lastused] + t[:cooldown] < Time.now and t[:lastused] = Time.now) or next
     
@@ -47,7 +48,7 @@ Trigger.new do |t|
     end
 
     if !fetishes.include?(args[0])
-      info[:respond].call("#{args[0]} is not a valid id")
+      info[:respond].call("#{args[0]} is not a valid id. Type !fetstat for a list.")
       next
     end
     
