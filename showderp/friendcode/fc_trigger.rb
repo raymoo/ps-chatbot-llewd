@@ -51,7 +51,8 @@ Trigger.new do |t|
   t[:cooldown] = 5 # seconds
 
   t.match { |info|
-    info[:what][0..2].downcase == '!fc' && info[:what][3..-1].strip
+    info[:what][0..2].downcase == '!fc' && info[:what][3..-1].strip &&
+    (info[:where] == 'pm' || info[:room] == 'showderp')
   }
   
   FCGetter.load_values

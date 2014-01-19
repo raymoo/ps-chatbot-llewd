@@ -23,8 +23,8 @@ Trigger.new do |t|
         t[:killcount][who] ||= 0
         t[:killcount][who] += 1
         result = killstrings.sample
-        result["::killer::"] = info[:who]
-        result["::killee::"] = info[:kill]
+        result = result.gsub("::killer::", info[:who])
+        result = result.gsub("::killee::", info[:kill])
         info[:respond].call(result)
       end
 
