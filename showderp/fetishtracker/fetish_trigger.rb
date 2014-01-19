@@ -74,7 +74,7 @@ Trigger.new do |t|
     if args.count != 2
 
       
-      result = 'Pm to me "!fetish <fetishid> <acceptancelevel>" to register your toleration of a fetish.'
+      result = 'Pm to me "!fetish <fetishid> <acceptancelevel>" to register your toleration of a fetish. !fetstat <fetishid> will display statistics for that fetish.'
       info[:respond].call(result)
       result = 'Available fetish ids are: '
       result += fetishes.join(', ')

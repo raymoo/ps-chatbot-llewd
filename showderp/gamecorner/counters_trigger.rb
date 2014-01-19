@@ -1,6 +1,6 @@
 Trigger.new do |t|
   t[:lastused] = Time.now
-  t[:cooldown] = 60 # seconds
+  t[:cooldown] = 30 # seconds
   t[:sao] ||= 0
   t[:dragonball] ||= 0
   t[:naruto] ||= 0
@@ -19,12 +19,12 @@ Trigger.new do |t|
   t.match do |info|
     info[:print] = info[:where] == 'c' && info[:what] == '!counter'
 
-    counter = info[:where] == 'c' && info[:what].scan(sao_reg).any? && info[:who].downcase != "gamecorner"
-    counter ||= info[:where] == 'c' && info[:what].scan(db_reg).any? && info[:who].downcase != "gamecorner"
-    counter ||= info[:where] == 'c' && info[:what].scan(nar_reg).any? && info[:who].downcase != "gamecorner"
-    counter ||= info[:where] == 'c' && info[:what].scan(ft_reg).any? && info[:who].downcase != "gamecorner"
-    counter ||= info[:where] == 'c' && info[:what].scan(snk_reg).any? && info[:who].downcase != "gamecorner"
-    counter ||= info[:where] == 'c' && info[:what].scan(op_reg).any? && info[:who].downcase != "gamecorner"
+    counter = info[:where] == 'c' && info[:what].scan(sao_reg).any? && info[:who].downcase != t[:login_name].downcase
+    counter ||= info[:where] == 'c' && info[:what].scan(db_reg).any? && info[:who].downcase != t[:login_name].downcase
+    counter ||= info[:where] == 'c' && info[:what].scan(nar_reg).any? && info[:who].downcase != t[:login_name].downcase
+    counter ||= info[:where] == 'c' && info[:what].scan(ft_reg).any? && info[:who].downcase != t[:login_name].downcase
+    counter ||= info[:where] == 'c' && info[:what].scan(snk_reg).any? && info[:who].downcase != t[:login_name].downcase
+    counter ||= info[:where] == 'c' && info[:what].scan(op_reg).any? && info[:who].downcase != t[:login_name].downcase
 
     info[:print] || counter
   end
