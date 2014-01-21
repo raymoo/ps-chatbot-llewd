@@ -20,3 +20,4 @@ autoban/viewbanlist_trigger.rb
 jak/jak_trigger.rb
 gamecorner/counters_trigger.rb
 gamecorner/airstrike_trigger.rb
+nextpostresponder/npost_trigger.rb
