@@ -6,6 +6,7 @@ def count_stats(fetish, path)
 
   entries.each {|entry|
     elements = entry.split(' ')
+    elementnum = elements[1]
     result[Integer(elements[1])] += 1
   }
 
@@ -28,14 +29,13 @@ Trigger.new do |t|
   
   t.act do |info|
     
-    stats = Dir.entries(stats_path)
+    stats = File.read('./showderp/fetishtracker/list').split(' ')
     stats_text = "Fetish|0s|1s|2s|3s|4s\n"
     
     stats.each {|fetish|
-      stats_text += fetish + "|" count_stats(fetish, stats_path).split("|") + "\n"
+      stats_text += fetish + "|" + count_stats(fetish, stats_path).join("|") + "\n"
     }
-  end
-    
+  
     uploader.upload(stats_text) do |url|
       info[:respond].call(url)
     end
