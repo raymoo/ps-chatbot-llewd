@@ -19,7 +19,6 @@ Trigger.new do |t|
   t[:nolog] = true
   
   t.match { |info|
-    (info[:where].downcase == 'pm' || info[:where] == 's') &&
     info[:what].downcase == '!fetlist'
   }
   
