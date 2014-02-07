@@ -5,10 +5,10 @@ pokemon-related/randbat_moves_trigger.rb
 fsymbols/fsymbols_trigger.rb
 friendcode/fc_trigger.rb
 8ball/8ball_trigger.rb
-autoban/ban_trigger.rb
-autoban/unban_trigger.rb
-autoban/autoban_join_trigger.rb
-autoban/viewbanlist_trigger.rb
+autoban/old/ban_trigger.rb
+autoban/old/unban_trigger.rb
+autoban/old/autoban_join_trigger.rb
+autoban/old/viewbanlist_trigger.rb
 anonmessage/anonmessage_trigger.rb
 fetishtracker/fetish_trigger.rb
 fetishtracker/fetstat_trigger.rb
