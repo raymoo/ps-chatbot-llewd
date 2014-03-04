@@ -19,7 +19,7 @@
 require './showderp/fsymbols/textgen.rb'
 
 Trigger.new do |t|
-  t[:who_can_access] = ['reimuraymoo']
+  t[:who_can_access] = ['reimuraymoo', 'muhbans', 'tempuranonymous']
   t[:id] = 'fsym'
   
   t.match { |info|
