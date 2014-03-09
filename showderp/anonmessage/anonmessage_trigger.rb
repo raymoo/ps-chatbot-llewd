@@ -12,10 +12,18 @@ Trigger.new do |t|
     info[:what][5..-1].strip
   }
   
-  t.act { |info|
-    t[:lastused][CBUtils.condense_name(info[:who])] + t[:cooldown] < Time.now or next
+  accesslist_path = "./showderp/anonmessage/access"
 
-    t[:lastused][CBUtils.condense_name(info[:who])] = Time.now
+  t.act { |info|
+    who = CBUtils.condense_name(info[:who])
+    if !File.read(accesslist_path).split("\n").index(who)
+      info[:respond].call("You do not have permission to send messages to rooms")
+      next
+    end
+
+    t[:lastused][who] + t[:cooldown] < Time.now or (info[:respond].call("You may only send messages once every 20 seconds") or next)
+
+    t[:lastused][who] = Time.now
 
 
     # gets arguments
