@@ -1,5 +1,9 @@
 Trigger.new do |t|
   t[:id] = 'mess'
+  t[:cooldown] = 20
+  t[:lastused] = Hash.new
+  t[:lastused].default = Time.now - t[:cooldown]
+
 
   t.match { |info|
     # checks
@@ -9,6 +13,10 @@ Trigger.new do |t|
   }
   
   t.act { |info|
+    t[:lastused][CBUtils.condense_name(info[:who])] + t[:cooldown] < Time.now or next
+
+    t[:lastused][CBUtils.condense_name(info[:who])] = Time.now
+
 
     # gets arguments
     args = info[:result].split(', ')
