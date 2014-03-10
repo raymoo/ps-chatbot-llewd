@@ -9,6 +9,7 @@ Trigger.new do |t|
     # checks
     info[:where] == 'pm' &&
     info[:what][0..4] == '!mess' &&
+    info[:what].size > 5 &&
     info[:what][5..-1].strip
   }
   
@@ -25,10 +26,6 @@ Trigger.new do |t|
       next
     end
 
-    t[:lastused][who] + t[:cooldown] < Time.now or (info[:respond].call("You may only send messages once every 20 seconds") or next)
-
-    t[:lastused][who] = Time.now
-
     if args.count < 2
       info[:respond].call("You need to specify a destination and message")
     else
@@ -41,6 +38,10 @@ Trigger.new do |t|
       end
 
       result += 'Anonymous Message: ' + args[1..-1].join(", ")
+
+      t[:lastused][who] + t[:cooldown] < Time.now or (info[:respond].call("You may only send messages once every 20 seconds") or next)
+      t[:lastused][who] = Time.now
+
     end
 
     #sends message
