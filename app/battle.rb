@@ -114,6 +114,7 @@ class BattleAdapter
     when 'turn'
       respond(@battle.logic.move(@rqid))
     when 'win'
+      respond('ur so terrible lmoa')
       respond('/leave')
     end
   end
