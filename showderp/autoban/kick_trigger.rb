@@ -15,42 +15,31 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-
 Trigger.new do |t|
   
+  t[:who_can_access] = ['stretcher', 'pick', 'scotteh']
   
-  
-  t[:nolog] = true
+  t[:id] = 'kick'
   
   t.match { |info|
-    access_path = "./#{info[:ch].group}/accesslist.txt"
-    FileUtils.touch(access_path)
-    t[:who_can_access] ||= File.read(access_path).split("\n")
-    
-    who = CBUtils.condense_name(info[:who])
-    
-    (info[:where].downcase == 'pm' || info[:where].downcase == 's') && 
-    info[:what].downcase == 'pmlog' && t[:who_can_access].index(who)
+    info[:what] =~ /\A!rk ([^,]+)\z/ && $1
   }
   
-  pmlog_path = nil
-  
-  begin
-    FileUtils.touch(pmlog_path)
-  rescue => e
-    puts "#{e}, ignoring"
-  end
-  
-  uploader = CBUtils::HasteUploader.new
   
   t.act do |info|
     
-    pmlog_path ||= "./essentials/#{t[:login_name]}_pm.log"
+    # First check if :who is a mod (or part of the epic meme police)
     
-    pmlog = File.read(pmlog_path)
+    next unless info[:all][2][0] == '@' || info[:all][2][0] == '#' || !!t[:who_can_access].index(CBUtils.condense_name(info[:who]))
+      
+    # Add :result to the ban list
+  
+    who = CBUtils.condense_name(info[:result])
     
-    uploader.upload(pmlog) do |url|
-      info[:respond].call(url)
+    info[:respond].call("/roomban #{who}")
+    
+    EM.add_timer(1) do
+      info[:respond].call("/roomunban #{who}")
     end
     
   end

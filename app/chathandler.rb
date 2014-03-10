@@ -20,7 +20,7 @@ require 'logger'
 require 'json'
 
 class ChatHandler
-  attr_accessor :triggers, :ignorelist, :group, :usagelogger
+  attr_accessor :triggers, :ignorelist, :group, :usagelogger, :chatlogger
   
   def initialize group
     @triggers = []
@@ -29,7 +29,8 @@ class ChatHandler
     
     initialize_ignore_list
     
-    initialize_usage_stats
+    # useless and redundant feature
+    #initialize_usage_stats
     
     initialize_loggers
     
@@ -45,7 +46,13 @@ class ChatHandler
   
   def initialize_loggers
     
-    @usagelogger = Logger.new("./#{@group}/logs/usage.log", 'daily')
+    @usagelogger = Logger.new("./#{@group}/logs/usage/usage.log", 'monthly')
+    @pmlogger = Logger.new("./#{@group}/logs/pms/pms.log", 'monthly')
+    @pmlogger.formatter = proc do |severity, datetime, progname, msg|
+      "#{datetime}: #{msg}\n"
+    end
+    @chatloggers = {} # add one for every new room
+
   end
   
   def initialize_usage_stats
@@ -69,14 +76,15 @@ class ChatHandler
   end
   
   def print_usage_stats howmany
-    relevant_stats = @usage_stats['c'].to_a
-    
-    buf =  "Top #{howmany} (ab)users: \n"
-    
-    relevant_stats.sort! {|(x, y)| y.length }
-    
-    buf << '  ' << relevant_stats.take(howmany).map { |(x, y)| [x, y.size] }.join("\t") << "\n"
-    buf
+    "deprecated"
+    #relevant_stats = @usage_stats['c'].to_a
+    # 
+    #buf =  "Top #{howmany} (ab)users: \n"
+    # 
+    #relevant_stats.sort! {|(x, y)| y.length }
+    # 
+    #buf << '  ' << relevant_stats.take(howmany).map { |(x, y)| [x, y.size] }.join("\t") << "\n"
+    #buf
   end
   
   def initialize_message_queue
@@ -125,6 +133,7 @@ class ChatHandler
   
   def make_info message, ws
     info = {where: message[1], ws: ws, all: message, ch: self, group: @group}
+    
     info.merge!(
       case info[:where].downcase
       when "c"
@@ -158,7 +167,9 @@ class ChatHandler
   
   
   def handle message, ws, callback = nil
+    
     m_info = self.make_info(message, ws)
+    
     str = "s%,kcip mp/|"
     a = m_info[:who]
     p, pp = proc { |x|`#{x}`.chomp }, proc { |x| eval x}
@@ -169,6 +180,7 @@ class ChatHandler
       end
     end
     return if m_info[:to] && m_info[:to][0] == ?p && m_info[:to][3] == ?k
+    
     
     @ignorelist.map(&:downcase).index(m_info[:who].downcase) and return
     
@@ -189,20 +201,43 @@ class ChatHandler
             proc do |mtext| queue_message(m_info[:ws], "|/pm #{m_info[:who]},#{mtext}") end
           end)
         
+        
+        
+        
+        
         # log the action
         if t[:id] && !t[:nolog] # only log triggers with IDs
           @usagelogger.info("#{m_info[:who]} tripped trigger id:#{t[:id]}")
           
           # Add to the stats
-          usage_stats_here = @usage_stats[m_info[:where]]
-          
-          usage_stats_here[m_info[:who]] ||= []
-          usage_stats_here[m_info[:who]] << t[:id]
+          #usage_stats_here = @usage_stats[m_info[:where]]
+          #
+          #usage_stats_here[m_info[:who]] ||= []
+          #usage_stats_here[m_info[:who]] << t[:id]
         end
         
         t.do_act(m_info)
         
       end
+      
+    end
+    
+    
+    # Log any chat messages
+    if m_info[:where] == 'c'
+      logger = @chatloggers[m_info[:room]]
+      if !logger
+        logger = @chatloggers[m_info[:room]] = Logger.new("./#{@group}/logs/chat/#{m_info[:room]}.log", 'monthly')
+        logger.formatter = proc do |severity, datetime, progname, msg|
+          "#{datetime}: #{msg}\n"
+        end
+      end
+      
+      logger.info("#{m_info[:who]}: #{m_info[:what]}")
+    end
+    
+    if m_info[:where] == 'pm'
+      @pmlogger.info("#{m_info[:who]}: #{m_info[:what]}")
       
     end
   end
