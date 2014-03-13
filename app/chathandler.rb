@@ -121,7 +121,7 @@ class ChatHandler
   
   def load_trigger(file)
     puts "loading:  #{file}"
-    trigger = eval(File.read("#{file}"))
+    trigger = eval(File.read(file))
     
     return unless trigger.is_a? Trigger
     
@@ -256,9 +256,9 @@ class ChatHandler
   def exit_gracefully
     # Write the usage stats to the file
     
-    File.open(@usage_path, 'w') do |f|
-      f.puts(JSON.dump(@usage_stats))
-    end
+    #File.open(@usage_path, 'w') do |f|
+    #  f.puts(JSON.dump(@usage_stats))
+    #end
     
     # Write ignore list to the file
     
