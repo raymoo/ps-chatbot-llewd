@@ -24,8 +24,7 @@ Trigger.new do |t|
     info[:what] =~ /\A!(?:uab|aub) ([^,]+)\z/ && $1
   }
   
-  banlist_path = './showderp/autoban/banlist.txt'
-  FileUtils.touch(banlist_path)
+  banlist_folder = './showderp/autoban/banlists/'
   
   t.act do |info|
     
@@ -33,7 +32,12 @@ Trigger.new do |t|
     
     next unless info[:all][2][0] == '@' || info[:all][2][0] == '#'
     
+    # Form path to actual banlist file
+
+    banlist_path = banlist_folder + info[:room] + ".banlist"
+
     # Remove info[:result] from the ban list
+    FileUtils.touch(banlist_path)
     who = info[:result]
     
     info[:respond].call("/roomunban #{who}")

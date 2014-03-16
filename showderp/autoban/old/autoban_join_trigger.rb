@@ -24,11 +24,13 @@ Trigger.new do |t|
     info[:where].downcase =~ /\A[jnl]\z/
   }
   
-  banlist_path = './showderp/autoban/banlist.txt'
-  FileUtils.touch(banlist_path)
+  banlist_folder = './showderp/autoban/banlists/'
   
   t.act do |info|
     
+    banlist_path = banlist_folder + info[:room] + ".banlist"
+
+    FileUtils.touch(banlist_path)
     banlist = File.read(banlist_path).split("\n")
     messages = info[:all]
     

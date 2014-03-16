@@ -30,7 +30,7 @@ Trigger.new do |t|
   uploader = CBUtils::HasteUploader.new
   
   t.act do |info|
-    
+=begin    
     banlist = File.read(banlist_path)
     
     banlist_text = if banlist.strip.empty?
@@ -42,6 +42,9 @@ Trigger.new do |t|
     uploader.upload(banlist_text) do |url|
       info[:respond].call(url)
     end
+=end
+      info[:respond].call("Sorry, transparency has been sacrificed for flexibility. I will fix this eventually.")
+
     
   end
 end

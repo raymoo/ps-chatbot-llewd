@@ -24,8 +24,7 @@ Trigger.new do |t|
     info[:what] =~ /\A!ab ([^,]+)\z/ && $1
   }
   
-  banlist_path = './showderp/autoban/banlist.txt'
-  FileUtils.touch(banlist_path)
+  banlist_folder = './showderp/autoban/banlists/'
   
   t.act do |info|
     
@@ -33,8 +32,13 @@ Trigger.new do |t|
     
     next unless info[:all][2][0] == '@' || info[:all][2][0] == '#'
       
+    # Form path to actual banlist file
+
+    banlist_path = banlist_folder + info[:room] + ".banlist"
+
     # Add info[:result] to the ban list
-  
+
+    FileUtils.touch(banlist_path)
     who = CBUtils.condense_name(info[:result])
     
     info[:respond].call("/roomban #{who}")
