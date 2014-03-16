@@ -32,7 +32,7 @@ Trigger.new do |t|
 
     FileUtils.touch(banlist_path)
     banlist = File.read(banlist_path).split("\n")
-    messages = info[:all]
+    messages = Array.new(info[:all])
     
     while messages.size > 0
       if messages.shift.downcase == 'j'
