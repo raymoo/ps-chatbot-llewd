@@ -42,7 +42,7 @@ Trigger.new do |t|
           info[:respond].call("/roomban #{name}")
           
         else
-          info[:respond].call("/roomvoice #{name}")
+          info[:respond].call("/roomvoice #{name}") unless info[:all][2][0] == '%' || info[:all][2][0] == '@' || info[:all][2][0] == '#'
         end
       end
     end
