@@ -38,7 +38,12 @@ Trigger.new do |t|
     while messages.size > 0
       if messages.shift.downcase == 'j'
         name = CBUtils.condense_name(messages.shift[1..-1]) # The first character will be ' ' or '+' etc
-        info[:respond].call("/roomban #{name}") if !whitelist.index(name)
+        if !whitelist.index(name) then
+          info[:respond].call("/roomban #{name}")
+          
+        else
+          info[:respond].call("/roomvoice #{name}")
+        end
       end
     end
   end
