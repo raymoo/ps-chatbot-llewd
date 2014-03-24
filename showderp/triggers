@@ -25,3 +25,4 @@ autoban/kick_trigger.rb
 autoban/whitelist_trigger.rb
 autoban/whitelistadd_trigger.rb
 autoban/whitelistremove_trigger.rb
+suck/suck_trigger.rb
