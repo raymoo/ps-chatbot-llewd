@@ -54,7 +54,7 @@ class BattleHandler
   def self.parse_poke_details details
     parts = details.split(', ')
     
-    { species: parts.shift, level: parts.shift[1..-1], gender: parts.shift }
+    { species: parts.shift.gsub('-*', ''), level: parts.shift[1..-1], gender: parts.shift }
   end
   
   def battle_loop format, ws
@@ -101,6 +101,10 @@ class BattleAdapter
       switched = message[1]
       who = switched[0..1]
       species = switched[5..-1]
+      
+      if species == 'Floette-Eternal-Flow'
+        species = 'Floette-Eternal-Flower'
+      end
       
       @battle.send(who).side ||= species
     when 'request'
@@ -231,12 +235,18 @@ require_relative 'battleutil/cc1vs1helper.rb'
 class CC1vs1Logic < BattleLogic
   def chooselead rqid
     
-    best = @me.team.values.max_by do |poke| 
-      species = BattleHandler.parse_poke_details(poke.details)[:species]
-      poke.moves.map { |move| CC1vs1.calculate_move_score(species, move, @other.team.values) }.reduce(:+)
+    best = @me.team.values.max_by do |poke|
+      if poke == 'Floette-Eternal-Flower'
+        0
+      else
+        species = BattleHandler.parse_poke_details(poke.details)[:species]
+        
+        
+        poke.moves.map { |move| CC1vs1.calculate_move_score(species, move, @other.team.values) }.reduce(:+)
+      end
     end
     
-    bestmonindex = @me.team.values.index(best)
+    bestmonindex = @me.team.values.index(best) + 1
     
     rest = (1..6).to_a
     rest.unshift(rest.delete(bestmonindex))

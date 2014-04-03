@@ -37,8 +37,9 @@ class Chatbot
     
     
     # load all of the triggers
-    
-    @ch.load_trigger_files
+    if opts[:triggers]
+      @ch.load_trigger_files
+    end
     
     # initialize console if requested
     
