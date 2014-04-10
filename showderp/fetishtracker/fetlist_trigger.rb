@@ -29,7 +29,7 @@ Trigger.new do |t|
   t.act do |info|
     
     stats = File.read('./showderp/fetishtracker/list').split(' ')
-    stats_text = "Fetish|0s|1s|2s|3s|4s\n"
+    stats_text = "Fetish|ban|warning|no warning|declare|love\n"
     
     stats.each {|fetish|
       stats_text += fetish + "|" + count_stats(fetish, stats_path).join("|") + "\n"

@@ -45,8 +45,6 @@ Trigger.new do |t|
 
     who = CBUtils.condense_name(info[:result])
     
-    info[:respond].call("/roomunban #{who}")
-    
     next if File.read(banlist_path).split("\n").index(who)
     
     File.open(banlist_path, "a") do |f|
