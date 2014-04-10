@@ -37,7 +37,12 @@ Trigger.new do |t|
     banlist_path = banlist_folder + info[:room] + ".whitelist"
 
     # Remove info[:result] from the ban list
-    FileUtils.touch(banlist_path)
+
+    if !File.exist?(banlist_path) then
+      info[:respond].call("This room is not configured to use a whitelist")
+      next
+    end
+
     who = info[:result]
     
     info[:respond].call("/roomban #{who}")
