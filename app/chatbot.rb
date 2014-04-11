@@ -106,7 +106,7 @@ class Chatbot
         ws.send("|/join #{$options[:room]}")
         
         
-      when 'c', 'pm', 'j', 'n', 'l'
+      when 'c', 'pm', 'j', 'n', 'l', 'tournament'
         @ch.handle(message, ws)
       
       when 'updatechallenges'

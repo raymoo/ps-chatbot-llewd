@@ -160,6 +160,14 @@ class ChatHandler
           who: $login[:name],
           what: message[2],
         }
+      when 'tournament'
+        {
+          room: message[0][1...-1],
+          action: message[2],
+          who: "",
+          what: ""
+        }
+
       end)
     
     info
@@ -182,7 +190,7 @@ class ChatHandler
           
           m_info[:respond] = (callback || 
             case m_info[:where].downcase
-            when 'c', 'j', 'n', 'l'
+            when 'c', 'j', 'n', 'l', 'tournament'
               proc do |mtext| queue_message(m_info[:ws], "#{m_info[:room]}|#{mtext}") end
             when 's'
               proc do |mtext| puts mtext end
