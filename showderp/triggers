@@ -27,3 +27,4 @@ autoban/whitelistadd_trigger.rb
 autoban/whitelistremove_trigger.rb
 suck/suck_trigger.rb
 tournament/tournament_trigger.rb
+topic/topic_trigger.rb
