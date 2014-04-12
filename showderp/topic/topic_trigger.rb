@@ -20,6 +20,6 @@ Trigger.new do |t|
       t[:topic][info[:room]] = info[:what][7..-1]
     end
 
-    info[:respond].call("The topic is: " + t[:topic][info[:room]])
+    info[:respond].call("/wall The topic is: " + t[:topic][info[:room]])
   end
 end
