@@ -4,16 +4,22 @@ Trigger.new do |t|
   t[:lastused] = Time.now - t[:cooldown]
   
   t.match { |info|
-    info[:what][0..5].downcase == '!topic'
+    info[:what][0..5].downcase == '!topic' &&
+    info[:where] == 'c'
   }
+
+  t[:topic] = Hash.new
+  t[:topic].default = "Nothing (not even SAO)"
   
   t.act do |info|
-    # ignores the cooldown check if user is PMing
-    if info[:where] != 'pm'
-      t[:lastused] + t[:cooldown] < Time.now or next
-      t[:lastused] = Time.now
-    end
+    t[:lastused] + t[:cooldown] < Time.now or next
+    t[:lastused] = Time.now
     
-    info[:respond].call("Nothing is the topic (not even SAO)")
+
+    if info[:what].size > 7
+      t[:topic][info[:room]] = info[:what][7..-1]
+    end
+
+    info[:respond].call("The topic is: " + t[:topic][info[:room]])
   end
 end
