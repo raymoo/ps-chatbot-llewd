@@ -12,6 +12,9 @@ Trigger.new do |t|
   t[:topic].default = "Nothing (not even SAO)"
   
   t.act do |info|
+
+    (info[:all][2][0] == '#' || info[:all][2][0] == '@' || info[:all][2][0] == '%' || info[:all][2][0] == '+') or next
+
     t[:lastused] + t[:cooldown] < Time.now or next
     t[:lastused] = Time.now
     

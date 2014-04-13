@@ -6,7 +6,7 @@ def is_num?(str)
   end
 end
 
-def record_entry(user, room, path)
+def record_entry_suck(user, room, path)
   user = CBUtils.condense_name(user)
   index = nil
   num = nil
@@ -66,7 +66,7 @@ Trigger.new do |t|
 
     info[:where] == "c" or next
     
-    numero = record_entry(info[:who], info[:room], dickspath)
+    numero = record_entry_suck(info[:who], info[:room], dickspath)
     info[:respond].call("#{info[:who]} has sucked #{numero} time(s)")
 
   }
