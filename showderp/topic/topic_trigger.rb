@@ -1,3 +1,5 @@
+$voiceperm = true
+
 Trigger.new do |t|
   t[:id] = "topic"
   t[:cooldown] = 3 # seconds
@@ -18,8 +20,7 @@ Trigger.new do |t|
     t[:lastused] + t[:cooldown] < Time.now or next
     t[:lastused] = Time.now
     
-
-    if info[:what].size > 7
+    if info[:what].size > 7 && ($voiceperm || !(info[:all][2][0] == '+'))
       t[:topic][info[:room]] = info[:what][7..-1]
     end
 
