@@ -183,7 +183,7 @@ class ChatHandler
           
           m_info[:respond] = (callback || 
             case m_info[:where].downcase
-            when 'c', 'j', 'n', 'l', 'tournament'
+            when 'c', 'j', 'n', 'l'
               proc do |mtext| queue_message(m_info[:ws], "#{m_info[:room]}|#{mtext}") end
             when 's'
               proc do |mtext| puts mtext end

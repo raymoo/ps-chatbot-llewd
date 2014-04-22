@@ -29,3 +29,4 @@ suck/suck_trigger.rb
 topic/topic_trigger.rb
 topic/topictoggle_trigger.rb
 speaker/speaker_trigger.rb
+speaker/speakertoggle_trigger.rb
