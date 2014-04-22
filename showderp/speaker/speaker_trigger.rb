@@ -28,7 +28,7 @@ Trigger.new do |t|
         end
       end
       
-      info[:respond].call("#{info[:who]} #{t[:chain].generate(10, seed).join(' ')}.".capitalize)
+      info[:respond].call("(#{info[:who]}) #{t[:chain].generate(10, seed).join(' ')}.".capitalize)
     else
       t[:chain].add_words(text)
     end
