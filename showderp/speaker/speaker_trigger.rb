@@ -17,7 +17,7 @@ Trigger.new do |t|
     
     if text[0..name.size-1] == name && text[name.size] == ','
       next if info[:who] == $login[:name] || !$speakable[info[:room]]
-    
+      (info[:all][2][0] == '#' || info[:all][2][0] == '@' || info[:all][2][0] == '%' || info[:all][2][0] == '+') or next
       words = text[name.size..-1].split(' ')
       seed = nil
 
@@ -28,7 +28,7 @@ Trigger.new do |t|
         end
       end
       
-      info[:respond].call("#{t[:chain].generate(10, seed).join(' ')}.".capitalize)
+      info[:respond].call("#{info[:who]} #{t[:chain].generate(10, seed).join(' ')}.".capitalize)
     else
       t[:chain].add_words(text)
     end
