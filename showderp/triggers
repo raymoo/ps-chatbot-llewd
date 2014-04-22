@@ -26,6 +26,6 @@ autoban/whitelist_trigger.rb
 autoban/whitelistadd_trigger.rb
 autoban/whitelistremove_trigger.rb
 suck/suck_trigger.rb
-tournament/tournament_trigger.rb
 topic/topic_trigger.rb
 topic/topictoggle_trigger.rb
+speaker/speaker_trigger.rb

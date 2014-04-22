@@ -160,13 +160,6 @@ class ChatHandler
           who: $login[:name],
           what: message[2],
         }
-      when 'tournament'
-        {
-          room: message[0][1...-1],
-          action: message[2],
-          who: "",
-          what: ""
-        }
 
       end)
     
@@ -220,7 +213,7 @@ class ChatHandler
         puts "Crashed in trigger #{t[:id]}"
         puts e.message
         puts e.backtrace
-      end
+      end   
       
     end
     
@@ -244,6 +237,32 @@ class ChatHandler
     end
   end
   
+  def handle_tournament message, ws
+    
+    # Code adapted from
+    # https://github.com/raymoo/ps-chatbot-llewd/commit/914f952a7371a6cfbcdf75fa87e349f0539a616a
+    
+    room = message[1..-1]
+    action = message[2]
+    
+    if room == 'create' && message[3] == 'challengecup1vs1'
+      ws.send('/tour join')
+    end
+    
+    if action == 'update'
+      info = JSON.parse(message[3])
+      
+      if info['challenged']
+        ws.send('/tour acceptchallenge')
+      end
+      
+      if info["challenges"] && info["challenges"].length != 0
+        ws.send("/tour challenge #{info["challenges"][0]}")
+      end
+    end
+      
+  end
+  
   def turn_by_id id, on
     @triggers.each do |t|
       if t[:id] == id
@@ -265,6 +284,10 @@ class ChatHandler
     # Write ignore list to the file
     
     IO.write(@ignore_path, @ignorelist.join("\n"))
+    
+    @triggers.each do |trigger|
+      trigger.exit
+    end
     
     puts "Done with exit sequence"
     
@@ -292,12 +315,22 @@ class Trigger
     @action = blk
   end
   
+  def exit &blk
+    @exit = blk
+  end
+  
   def is_match? m_info
     @match.call(m_info)
   end
   
   def do_act m_info
     @action.call(m_info)
+  end
+  
+  def exit
+    if @exit
+      @exit.call
+    end
   end
   
   def get var
@@ -307,6 +340,7 @@ class Trigger
   def set var, to
     @vars[var] = to
   end
+  
   
   alias_method :[], :get
   alias_method :[]=, :set
