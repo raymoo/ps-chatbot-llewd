@@ -42,7 +42,7 @@ Trigger.new do |t|
       
       info[:respond].call("(#{info[:who]}) #{chain.generate(10, seed).join(' ')}.".capitalize)
     else
-      t[:chain].add_words(text)
+      chain.add_words(text)
     end
   end
   
