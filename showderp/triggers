@@ -31,3 +31,4 @@ topic/topictoggle_trigger.rb
 speaker/speaker_trigger.rb
 speaker/speakertoggle_trigger.rb
 tournament/tournament_trigger.rb
+shiritori/shiritori_trigger.rb
