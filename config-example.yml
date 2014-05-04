@@ -2,6 +2,9 @@ options:
     # login - the bot's username must be registered on PS
     name: enter-the-bot's-name-here
     pass: secret-password-here
+
+    # avatar - the number corresponding to the desired avatar
+    avatar: 420
     
     # Server to login to and room to join
     server: ws://sim.smogon.com:8000/showdown/websocket
