@@ -20,7 +20,7 @@ Trigger.new do |t|
       end
 
       if infos["challenges"] && infos["challenges"].length != 0
-        info[:respond].call("/tour challenge #{infos["challenges"][0]}")
+        infos["challenges"].each{|challenge| info[:respond].call("/tour challenge #{challenge}")}
       end
       
     end
