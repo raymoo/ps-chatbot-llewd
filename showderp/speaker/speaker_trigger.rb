@@ -29,7 +29,6 @@ Trigger.new do |t|
     name = USERNAME
     
     if text[0..name.size].downcase == "#{name.downcase},"
-<<<<<<< HEAD
       next if info[:who] == USERNAME
       (info[:all][2][0] == '#' || info[:all][2][0] == '@' || info[:all][2][0] == '%' || info[:all][2][0] == '+') or next
     
