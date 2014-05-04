@@ -1,5 +1,6 @@
 require "./showderp/speaker/markovchains.rb"
 require 'json'
+require 'uri'
 
 Trigger.new do |t|
   t[:id] = 'speaker'
@@ -23,13 +24,15 @@ Trigger.new do |t|
   puts 'done.'
   
   t.act do |info|
-    text = info[:result]
+    text = info[:result].gsub(URI.regexp, '') # remove links
     
-    name = $login[:name]
+    name = USERNAME
     
     if text[0..name.size].downcase == "#{name.downcase},"
-      next if info[:who] == $login[:name]
+<<<<<<< HEAD
+      next if info[:who] == USERNAME
       (info[:all][2][0] == '#' || info[:all][2][0] == '@' || info[:all][2][0] == '%' || info[:all][2][0] == '+') or next
+    
       words = text[name.size..-1].split(' ')
       seed = nil
       
@@ -40,7 +43,7 @@ Trigger.new do |t|
         end
       end
       
-      info[:respond].call("(#{info[:who]}) #{chain.generate(20, seed).join(' ')}.".capitalize)
+      info[:respond].call("(#{info[:who]}) #{chain.generate(20, seed).join(' ')}.")
     else
       chain.add_words(text)
     end
