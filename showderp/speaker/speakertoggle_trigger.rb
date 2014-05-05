@@ -24,7 +24,7 @@ Trigger.new do |t|
   t[:id] = "speakertoggle"
   
   t.act do |info|
-    (info[:all][2][0] == '#' || info[:all][2][0] == '@') or next
+    (info[:all][2][0] =~ /[@#]/) or next
     
     $speakable[info[:room]] && !(info[:respond].call("I will suppress my free speech")) || (info[:respond].call("I can now talk freely"))
     

@@ -30,7 +30,7 @@ Trigger.new do |t|
     
     # First check if :who is a mod
     
-    next unless info[:all][2][0] == '@' || info[:all][2][0] == '#'
+    next unless info[:all][2][0] =~ /[@#]/
     
     # Form path to actual banlist file
 

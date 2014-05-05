@@ -26,7 +26,7 @@ Trigger.new do |t|
   
   t.act do |info|
 
-    (info[:all][2][0] == '#' || info[:all][2][0] == '@') or next
+    (info[:all][2][0] =~ /[@#]/) or next
 
     $voiceperm && !(info[:respond].call("Voices may no longer change the topic")) || (info[:respond].call("Voices can now change the topic"))
 

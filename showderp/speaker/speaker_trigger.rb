@@ -30,7 +30,7 @@ Trigger.new do |t|
     
     if text[0..name.size].downcase == "#{name.downcase},"
       next if info[:who] == USERNAME
-      (info[:all][2][0] == '#' || info[:all][2][0] == '@' || info[:all][2][0] == '%' || info[:all][2][0] == '+') or next
+      (info[:all][2][0] =~ /[+%@#]/) or next
     
       words = text[name.size..-1].split(' ')
       seed = nil
