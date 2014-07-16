@@ -16,7 +16,7 @@ bots:
         server: ws://sim.smogon.com:8000/showdown/websocket
         
         # Room to join after login
-        room: my_secret_room
+        room: my_secret_room<<<<<<< HEAD
 
 	# avatar - the number corresponding to the desired avatar
 	avatar: 420
@@ -33,4 +33,9 @@ bots:
         
         # Show everything sent from the server in the console
         log: no
+        
+        # autoban configuration
+        autoban:
+            storage: local
+            
         

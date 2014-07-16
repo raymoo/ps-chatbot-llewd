@@ -1,24 +1,9 @@
-# ps-chatbot: a chatbot that responds to commands on Pokemon Showdown chat
-# Copyright (C) 2014 pickdenis
-# 
-# This program is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License
-# as published by the Free Software Foundation; either version 2
-# of the License, or (at your option) any later version.
-# 
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-# 
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
 
 
 class Chatbot
   include EM::Deferrable
-  attr_reader :name, :pass, :connected, :ch, :bh, :id, :config
+  attr_reader :name, :pass, :connected, :ch, :bh, :id, :config, :dirname
   
   PS_URL = 'ws://sim.smogon.com:8000/showdown/websocket'
   
@@ -32,6 +17,7 @@ class Chatbot
     
     @config = opts[:allconfig]
     
+    initialize_dir
     @ch = ChatHandler.new(opts[:triggers], self)
     @bh = BattleHandler.new(@ch)
     @connected = false
@@ -45,11 +31,15 @@ class Chatbot
     end
     
     
-    @room = opts[:room]
+    @rooms = opts[:room] || opts[:rooms]
+    if !@rooms.is_a? Array
+      @rooms = [@rooms]
+    end
     
     @server = (opts[:server] || PS_URL)
     
-    if @room != 'none'
+    
+    if @rooms != 'none'
       connection_checker = EventMachine::PeriodicTimer.new(10) do
         # If not connected, try to reconnect
         if !@connected
@@ -57,6 +47,20 @@ class Chatbot
         end
       end
     end
+    
+    
+  end
+  
+  def initialize_dir
+    
+    @dirname = "bot-#{@id}"
+    
+    # initialize all of the directories that we need
+    FileUtils.mkdir_p("./#{@dirname}/logs/chat")
+    FileUtils.mkdir_p("./#{@dirname}/logs/usage")
+    FileUtils.mkdir_p("./#{@dirname}/logs/pms")
+    
+    FileUtils.touch("./#{dirname}/accesslist.txt")
   end
   
   def connect
@@ -98,11 +102,21 @@ class Chatbot
             ws.send("|/trn #{@name},0,#{assertion}")
           
           end
+        when 'formats'
+          data = message[2..-1].join('|')
           
+          # don't bother understanding the next line, it just takes the data PS sends for formats and
+          # changes it into a list of formats
+          
+          $battle_formats = ('|' + data.gsub(/[,#]/, '')).gsub(/\|\d\|[^|]+\|/, '').split('|').map { |f| CBUtils.condense_name(f) }
         when 'updateuser'
-          if message[2] == @name
+          if CBUtils.condense_name(message[2]) == CBUtils.condense_name(@name)
             puts "#{@id}: Succesfully logged in!"
-            ws.send("|/join #{@room}")
+            
+            @rooms.each do |r|
+              puts "#{@id} Joining room #{r}."
+              ws.send("|/join #{r}")
+            end
             
             start_console(ws) if @console_option
           end

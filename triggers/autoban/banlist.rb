@@ -1,73 +1,133 @@
-# ps-chatbot: a chatbot that responds to commands on Pokemon Showdown chat
-# Copyright (C) 2014 pickdenis
-# 
-# This program is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License
-# as published by the Free Software Foundation; either version 2
-# of the License, or (at your option) any later version.
-# 
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-# 
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
 
 require 'eventmachine'
 require 'em-http-request'
 require 'fileutils'
+require 'yaml'
 
-module Banlist
-  extend self
+class Banlist
   
-  SS_KEY = '0AvMzk9ZN2tZtdG9jNjFocHNrWVhnajZTa2V1d0dJbmc'
-  SS_URL = 'https://docs.google.com/spreadsheet/pub'
   
-  FORM_KEY = '1YJQFUBtcrJZKxhe4htXd9_kXPcOlTTdUnFfhtbJjJXY'
-  FORM_URL = "https://docs.google.com/forms/d/#{FORM_KEY}/formResponse"
+  # The room the banlist is in effect in
   
-  def set_pw pw
-    @@pw = pw
+  attr_reader :room
+  
+  # The method of storage
+  # :local means it will be stored in a file locally
+  # :central means it will be stored in a central banlist, on google drive
+  # If you want to use :central, you need to know the secret password
+  
+  attr_reader :storage
+  
+  def initialize room, storage, dirname=nil
+    @room = room
+    @storage = (storage == :central ? :central : :local)
+    
+    if @storage == :local
+      @blpath = "./#{dirname}/autoban/"
+      FileUtils.mkdir_p(@blpath)
+      @blpath << "#{@room}.yml"
+      FileUtils.touch(@blpath)
+    end
+    
+    get
+    
   end
   
-  def get &callback
-    @@banlist = []
+  def set_pw pw
+    @pw = pw
+  end
+  
+  # The actual list
+  
+  attr_reader :banlist
+  
+  def get(&callback)
+    @banlist = []
     
-    EM::HttpRequest.new(SS_URL).get(query: {key: SS_KEY, single: true, gid: 1, output: "csv"}).callback do |http|
-      @@banlist.push(*http.response.split("\n"))
-      callback.call(@@banlist) if block_given?
+    if storage == :central
+      # Not implemented yet!
+    else
+      @banlist = YAML.load(File.open(@blpath)) || []
+      @callback.call(@banlist) if block_given?
     end
   end
   
-  def list
-    class_variable_defined?("@@banlist") ? @@banlist : []
+  def get_entry(name)
+    @banlist.find { |entry| entry.name == name }
   end
   
-  def action(act, name, &callback)
+  def has(name)
+    !!get_entry(name)
+  end
+  
+  def update_file
+    File.open(@blpath, 'w') do |f|
+      f.puts(YAML.dump(@banlist))
+    end
+  end
+  
+  def action(act, name, actor, reason=nil, &callback)
     # name = CBUtils.condense_name(name)
     if act == "ab"
-      @@banlist << name
+      if !has(name)
+        
+        entry = BanEntry.new(name, reason, actor)
+        
+        @banlist << entry
+        update_file if storage == :local
+        
+      end
+      
     elsif act == "uab"
-      @@banlist.delete(name)
+      
+      @banlist.delete(get_entry(name))
+      
+      update_file if storage == :local
       
     end
     
-    EM::HttpRequest.new(FORM_URL).post(query: {
-      "entry.272819384" => "#{act} #{name}",
-      "entry.295377180" => @@pw
-    }).callback do |http|
-      callback.call(http) if block_given?
+    if storage == :central
+      # Not implemented yet
     end
   end
   
-  def ab(name, &callback)
-    action("ab", name, &callback)
+  def ab(name, reason, actor, &callback)
+    action("ab", name, actor, reason, &callback)
   end
   
-  def uab(name, &callback)
-    action("uab", name, &callback)
+  def uab(name, reason=nil, actor=nil, &callback)
+    action("uab", name, actor, reason, &callback)
+  end
+  
+  def to_s
+    @banlist.map(&:to_s).join("\n")
+  end
+  
+end
+
+BanEntry = Struct.new(:name, :reason, :bannedby)
+
+class BanEntry
+  def to_s
+    "#{name}|#{reason || '<unknown>'} (banned by #{bannedby || '<unknown>'})"
+    
+  end
+end
+
+class BLHandler
+  
+  def initialize
+    @lists = {}
+  end
+  
+  def initialize_list(room, storage, pw, dirname)
+    @lists[room] ||= Banlist.new(room, storage, dirname)
+    @lists[room].set_pw(pw)
+  end
+  
+  def get(room)
+    @lists[room]
   end
   
 end

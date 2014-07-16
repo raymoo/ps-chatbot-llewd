@@ -1,43 +1,27 @@
-# ps-chatbot: a chatbot that responds to commands on Pokemon Showdown chat
-# Copyright (C) 2014 pickdenis
-# 
-# This program is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License
-# as published by the Free Software Foundation; either version 2
-# of the License, or (at your option) any later version.
-# 
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-# 
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
 
 
 require 'logger'
 require 'json'
+require 'fileutils'
 
 class ChatHandler
   attr_accessor :triggers, :ignorelist, :group, :usagelogger, :chatlogger
   attr_reader :id, :dirname, :name, :pass, :config
   
   def initialize triggers, chatbot
+    # mostly convenience
     @id = chatbot.id
     @name = chatbot.name
     @pass = chatbot.pass
     @config = chatbot.config
-    
-    @dirname = "bot-#{@id}"
-    # initialize all of the directories that we need
-    FileUtils.mkdir_p("./#{@dirname}/logs/chat")
-    FileUtils.mkdir_p("./#{@dirname}/logs/usage")
-    FileUtils.mkdir_p("./#{@dirname}/logs/pms")
+    @dirname = chatbot.dirname
     
     @trigger_files = triggers
     
     @triggers = []
+    @trigger_paths = {}
+    
     @ignorelist = []
     
     initialize_ignore_list
@@ -48,7 +32,6 @@ class ChatHandler
     initialize_loggers
     
     initialize_message_queue
-    
   end
   
   def initialize_ignore_list
@@ -118,15 +101,11 @@ class ChatHandler
   
   def load_trigger_files
     
-    files = @trigger_files
-    
-    Dir["./essentials/**/*_trigger.rb"].each do |f|
-      load_trigger(f)
-    end
+    files = @trigger_files.map { |f| Dir[f] }.flatten
     
     if files
       files.each do |f|
-        load_trigger("./#{f}")
+        load_trigger("#{f}")
       end
     end
     
@@ -135,8 +114,30 @@ class ChatHandler
   def load_trigger(file)
     puts "#{@id}: loading:  #{file}"
     
+    begin
+      trigger = load_trigger_code(File.read(file), file)
+    rescue => e
+      puts e.message
+      return false
+    end
+    
+    return false if !trigger
+    
+    if trigger[:id]
+      @trigger_paths[trigger[:id]] = file
+    end
+  end
+  
+  def load_trigger_code(code, file='(no file given)')
+    
     ch = self # This is so that 'ch' can be accessed within the trigger
-    trigger = eval(File.read(file))
+    
+    begin
+      trigger = eval(code, binding, file)
+    rescue => e
+      puts e.message
+      return false
+    end
     
     return unless trigger.is_a? Trigger
     
@@ -146,10 +147,22 @@ class ChatHandler
     trigger.init
     
     @triggers << trigger
+    
+    trigger
+    
+  end
+  
+  def reload_trigger(id)
+    trigger = get_by_id(id)
+    return false if !trigger
+    trigger.exit
+    @triggers.delete(trigger)
+    load_trigger(@trigger_paths[id])
+    true
   end
   
   def make_info message, ws
-    info = {where: message[1], ws: ws, all: message, ch: self, id: @id}
+    info = {where: message[1], ws: ws, all: message, ch: self, id: @id, what: ''}
     
     info.merge!(
       case info[:where].downcase
@@ -204,6 +217,9 @@ class ChatHandler
         }
       end)
     
+    info[:rawroom] = info[:room]
+    info[:room] = CBUtils.condense_name(info[:room] || '')
+    
     info
   end
   
@@ -215,47 +231,52 @@ class ChatHandler
     
     @ignorelist.map(&:downcase).index(m_info[:who].downcase) and return
     
-    @triggers.each do |t|
-      begin
-        t[:off] and next
-        result = t.is_match?(m_info)
+    @triggers.sort_by { |t| t[:priority] }.reverse_each do |t|
+      t[:off] and next
+      result = t.is_match?(m_info)
+      
+      if result
+        m_info[:result] = result
         
-        if result
-          m_info[:result] = result
-          
-          m_info[:respond] = (callback || 
-            case m_info[:where].downcase
-            when 'c', 'j', 'n', 'l', 'tournament'
-              proc do |mtext| queue_message(m_info[:ws], "#{m_info[:room]}|#{mtext}") end
-            when 's'
-              proc do |mtext| puts mtext end
-            when 'pm'
-              proc do |mtext| queue_message(m_info[:ws], "|/pm #{m_info[:who]},#{mtext}") end
-            end)
-          
-          
-          
-          
-          
-          # log the action
-          if t[:id] && !t[:nolog] # only log triggers with IDs
-            @usagelogger.info("#{m_info[:who]} tripped trigger id:#{t[:id]}")
-            
-            # Add to the stats
-            #usage_stats_here = @usage_stats[m_info[:where]]
-            #
-            #usage_stats_here[m_info[:who]] ||= []
-            #usage_stats_here[m_info[:who]] << t[:id]
+        o_callback = 
+          case m_info[:where].downcase
+          when 'c', 'j', 'n', 'l', 'tournament'
+            proc do |mtext| queue_message(m_info[:ws], "#{m_info[:room]}|#{mtext}") end
+          when 'pm'
+            proc do |mtext| queue_message(m_info[:ws], "|/pm #{m_info[:who]},#{mtext}") end
+          else
+            proc do |mtext| $stderr.puts(mtext) end
           end
+        
+        m_info[:respond] = (callback || o_callback)
+        
+        
+        
+        # log the action
+        if t[:id] && !t[:nolog] # only log triggers with IDs
+          @usagelogger.info("#{m_info[:who]} tripped trigger id:#{t[:id]}")
+          
+          # Add to the stats
+          #usage_stats_here = @usage_stats[m_info[:where]]
+          #
+          #usage_stats_here[m_info[:who]] ||= []
+          #usage_stats_here[m_info[:who]] << t[:id]
+        end
+        
+        begin
           
           t.do_act(m_info)
+        
+        rescue => e
+          puts "Crashed in trigger #{t}"
+          puts e.message
+          puts e.backtrace
           
-        end
-      rescue => e
-        puts "Crashed in trigger #{t[:id]}"
-        puts e.message
-        puts e.backtrace
-      end   
+          m_info[:respond].call("Crashed in trigger #{t}; temporarily turning off.")
+          t[:off] = true
+        end   
+        
+      end
       
     end
     
@@ -280,15 +301,25 @@ class ChatHandler
   end
   
   def turn_by_id id, on
-    @triggers.each do |t|
-      if t[:id] == id
-        t[:off] = !on
-        return true
-      end
-    end
-    
-    false
+    t = get_by_id(id)
+    return if !t
+    t[:off] = !on
   end
+  
+  # convenience methods
+  
+  def turn_off id
+    turn_by_id(id, false)
+  end
+  
+  def turn_on id
+    turn_by_id(id, true)
+  end
+  
+  
+  
+  
+  
   
   def exit_gracefully
     # Write the usage stats to the file
@@ -314,6 +345,13 @@ class ChatHandler
     @triggers.push(trigger)
     self
   end
+  
+  
+  
+  def has_access(user)
+    IO.readlines("./#{@dirname}/accesslist.txt").map(&:strip).index(CBUtils.condense_name(user))
+  end
+  
 
 end
 
@@ -321,6 +359,7 @@ class Trigger
   
   def initialize &blk
     @vars = {}
+    set(:priority, 0)
     yield self
   end
   
@@ -345,7 +384,7 @@ class Trigger
   end
   
   # Optional trigger field
-  # t.exit { what to do when trigger is initialized }
+  # t.init { what to do when trigger is initialized }
   def init &blk
     if block_given?
       @init = blk
@@ -370,6 +409,10 @@ class Trigger
   
   def set var, to
     @vars[var] = to
+  end
+  
+  def to_s
+    get(:id) || '<no id>'
   end
   
   

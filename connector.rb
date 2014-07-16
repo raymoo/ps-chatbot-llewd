@@ -1,19 +1,4 @@
-# ps-chatbot: a chatbot that responds to commands on Pokemon Showdown chat
-# Copyright (C) 2014 pickdenis
-# 
-# This program is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License
-# as published by the Free Software Foundation; either version 2
-# of the License, or (at your option) any later version.
-# 
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-# 
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
 
 
 require 'faye/websocket'
@@ -31,7 +16,7 @@ require './app/socketinput.rb'
 require './app/utils.rb'
 
 
-configs = YAML.load(File.open( ARGV[0] || 'config.yml' ))["bots"]
+
 
 
 
@@ -40,6 +25,20 @@ require './app/pokedata.rb'
 
 if __FILE__ == $0
   
+  cfg_file = ARGV[0]
+  
+  if cfg_file
+    puts "Using config file: #{cfg_file}."
+  else
+    puts "No config file specified, attempting to use 'config.yml'"
+    cfg_file = 'config.yml'
+  end
+
+  if File.exist?(cfg_file)
+    configs = YAML.load(File.open(cfg_file))["bots"]
+  else
+    raise "config file specified #{cfg_file} does not exist!"
+  end
   
   $0 = 'pschatbot'
   
@@ -50,7 +49,9 @@ if __FILE__ == $0
         id: options['id'],
         name: options['name'], 
         pass: options['pass'],
-        room: options['room'], 
+        room: options['room'], # compatibility
+        rooms: options['rooms'], 
+        console: options['console'],
         server: (options['server'] || nil),
         log: options['log'],
         usetriggers: options['usetriggers'],
@@ -64,8 +65,7 @@ if __FILE__ == $0
     end
     
     exiting = false
-    
-    Signal.trap('INT') do
+    exitblk = proc do
       
       next if exiting
       
@@ -75,8 +75,9 @@ if __FILE__ == $0
         bot.exit_gracefully
       end
       
-      Process.exit
     end
+    
+    at_exit &exitblk
     
   end
   
