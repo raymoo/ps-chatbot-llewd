@@ -17,32 +17,28 @@
 
 
 Trigger.new do |t|
-  t[:id] = 'ignore'
+  t[:id] = "autoban_join"
   t[:nolog] = true
   
-  access_path = "./#{ch.dirname}/accesslist.txt"
-  FileUtils.touch(access_path)
-  t[:who_can_access] = File.read(access_path).split("\n")
-  
   t.match { |info|
-    
-    
-    who = CBUtils.condense_name(info[:who])
-    
-    if info[:where] == 'pm' && t[:who_can_access].index(who) || info[:where] == 's'
-      info[:what] =~ /\Aignore (.*?)\z/
-      $1
-    end
+    info[:where].downcase =~ /\A[jnl]\z/
   }
   
-  t.act { |info| 
-    realname = CBUtils.condense_name(info[:result])
+  banlist_folder = './triggers/autoban/banlists/'
+  
+  t.act do |info|
     
-    if info[:ch].ignorelist.index(realname)
-      info[:respond].call("#{info[:result]} is already on the ignore list.")
-    else
-      info[:ch].ignorelist << realname
-      info[:respond].call("Added #{info[:result]} to ignore list. (case insensitive)")
+    banlist_path = banlist_folder + info[:room] + ".banlist"
+
+    FileUtils.touch(banlist_path)
+    banlist = File.read(banlist_path).split("\n")
+    messages = Array.new(info[:all])
+    
+    while messages.size > 0
+      if messages.shift.downcase == 'j'
+        name = CBUtils.condense_name(messages.shift[1..-1]) # The first character will be ' ' or '+' etc
+        info[:respond].call("/roomban #{name}") if banlist.index(name)
+      end
     end
-  }
+  end
 end

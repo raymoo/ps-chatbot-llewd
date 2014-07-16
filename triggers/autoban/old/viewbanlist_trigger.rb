@@ -17,32 +17,34 @@
 
 
 Trigger.new do |t|
-  t[:id] = 'ignore'
+  t[:id] = "banlist"
   t[:nolog] = true
   
-  access_path = "./#{ch.dirname}/accesslist.txt"
-  FileUtils.touch(access_path)
-  t[:who_can_access] = File.read(access_path).split("\n")
-  
   t.match { |info|
-    
-    
-    who = CBUtils.condense_name(info[:who])
-    
-    if info[:where] == 'pm' && t[:who_can_access].index(who) || info[:where] == 's'
-      info[:what] =~ /\Aignore (.*?)\z/
-      $1
-    end
+    (info[:where].downcase == 'pm' || info[:where] == 's') &&
+    info[:what].downcase == 'banlist'
   }
   
-  t.act { |info| 
-    realname = CBUtils.condense_name(info[:result])
+  banlist_path = './triggers/autoban/banlist.txt'
+  FileUtils.touch(banlist_path)
+  uploader = CBUtils::HasteUploader.new
+  
+  t.act do |info|
+=begin    
+    banlist = File.read(banlist_path)
     
-    if info[:ch].ignorelist.index(realname)
-      info[:respond].call("#{info[:result]} is already on the ignore list.")
+    banlist_text = if banlist.strip.empty?
+      'nobody'
     else
-      info[:ch].ignorelist << realname
-      info[:respond].call("Added #{info[:result]} to ignore list. (case insensitive)")
+      banlist
     end
-  }
+    
+    uploader.upload(banlist_text) do |url|
+      info[:respond].call(url)
+    end
+=end
+      info[:respond].call("Sorry, transparency has been sacrificed for flexibility. I will fix this eventually.")
+
+    
+  end
 end

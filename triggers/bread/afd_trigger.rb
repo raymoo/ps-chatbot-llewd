@@ -16,33 +16,39 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 
-Trigger.new do |t|
-  t[:id] = 'ignore'
-  t[:nolog] = true
+require "./triggers/bread/breadfinder.rb"
+require "./triggers/bread/battles.rb"
+
+Trigger.new do |t| # battles
+  t[:id] = 'afd'
+  t[:cooldown] = 10 # seconds
+  t[:lastused] = Time.now - t[:cooldown]
   
-  access_path = "./#{ch.dirname}/accesslist.txt"
-  FileUtils.touch(access_path)
-  t[:who_can_access] = File.read(access_path).split("\n")
-  
-  t.match { |info|
+  t.match { |info| 
+    info[:what].downcase == '!afd' &&
+    (info[:where] == 'pm' || info[:room] == 'showderp')
     
-    
-    who = CBUtils.condense_name(info[:who])
-    
-    if info[:where] == 'pm' && t[:who_can_access].index(who) || info[:where] == 's'
-      info[:what] =~ /\Aignore (.*?)\z/
-      $1
-    end
   }
   
-  t.act { |info| 
-    realname = CBUtils.condense_name(info[:result])
+  t.act do |info|
+    t[:lastused] + t[:cooldown] < Time.now or next
     
-    if info[:ch].ignorelist.index(realname)
-      info[:respond].call("#{info[:result]} is already on the ignore list.")
-    else
-      info[:ch].ignorelist << realname
-      info[:respond].call("Added #{info[:result]} to ignore list. (case insensitive)")
+    t[:lastused] = Time.now
+    
+    Battles.get_battles do |battles|
+      battle, time = battles.last
+      
+      
+      result = if battle.nil?
+        "couldn't find any battles, sorry"
+      else
+        time_since = (Time.now - time).to_i / 60 # minutes
+        
+        battle["play.pokemonshowdown.com"] = "showdown-afd.psim.us"
+        "champ battle: #{battle}, posted #{time_since} minutes ago."
+      end
+      
+      info[:respond].call(result)
     end
-  }
+  end
 end

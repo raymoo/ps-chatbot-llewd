@@ -17,32 +17,42 @@
 
 
 Trigger.new do |t|
-  t[:id] = 'ignore'
-  t[:nolog] = true
   
-  access_path = "./#{ch.dirname}/accesslist.txt"
-  FileUtils.touch(access_path)
-  t[:who_can_access] = File.read(access_path).split("\n")
+  t[:id] = "wl"
   
   t.match { |info|
-    
-    
-    who = CBUtils.condense_name(info[:who])
-    
-    if info[:where] == 'pm' && t[:who_can_access].index(who) || info[:where] == 's'
-      info[:what] =~ /\Aignore (.*?)\z/
-      $1
-    end
+    info[:what] =~ /\A!wl ([^,]+)\z/ && $1
   }
   
-  t.act { |info| 
-    realname = CBUtils.condense_name(info[:result])
+  banlist_folder = './triggers/autoban/banlists/'
+  
+  t.act do |info|
     
-    if info[:ch].ignorelist.index(realname)
-      info[:respond].call("#{info[:result]} is already on the ignore list.")
-    else
-      info[:ch].ignorelist << realname
-      info[:respond].call("Added #{info[:result]} to ignore list. (case insensitive)")
+    # First check if :who is a mod
+    
+    next unless info[:all][2][0] =~ /[@#]/
+      
+    # Form path to actual whitelist file
+
+    banlist_path = banlist_folder + info[:room] + ".whitelist"
+
+    # Add info[:result] to the white list
+    
+    if !File.exist?(banlist_path) then
+      info[:respond].call("This room is not configured to use a whitelist")
+      next
     end
-  }
+
+    who = CBUtils.condense_name(info[:result])
+    
+    next if File.read(banlist_path).split("\n").index(who)
+    
+    File.open(banlist_path, "a") do |f|
+      f.puts(who)
+    end
+    info[:respond].call("Added #{who} to whitelist.")
+    
+    
+    
+  end
 end
