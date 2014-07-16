@@ -1,6 +1,7 @@
 
 
 
+
 class Chatbot
   include EM::Deferrable
   attr_reader :name, :pass, :connected, :ch, :bh, :id, :config, :dirname
@@ -14,6 +15,7 @@ class Chatbot
     @pass = opts[:pass]
     @avatar = opts[:avatar]
     @log_messages = opts[:log]
+    @console_option = opts[:console]
     
     @config = opts[:allconfig]
     
@@ -29,8 +31,9 @@ class Chatbot
     if opts[:usetriggers]
       @ch.load_trigger_files
     end
-    
-    
+
+    # initialize console if requested
+
     @rooms = opts[:room] || opts[:rooms]
     if !@rooms.is_a? Array
       @rooms = [@rooms]
@@ -149,7 +152,14 @@ class Chatbot
       @bh.battle_loop('challengecup1vs1', ws)
     end
   end
-  
+
+  def start_console ws
+    @console = Console.new(nil, @ch)
+    puts 'Started console'
+    @console.ws = ws
+    @console.start_loop
+  end
+
   def exit_gracefully
     @ch.exit_gracefully
   end
