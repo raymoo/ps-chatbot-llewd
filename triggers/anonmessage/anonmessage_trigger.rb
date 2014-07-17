@@ -14,6 +14,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+require 'fileutils'
+require 'uri'
 
 Trigger.new do |t|
   t[:id] = 'mess'
@@ -29,8 +31,10 @@ Trigger.new do |t|
     info[:what].size > 5 &&
     info[:what][5..-1].strip
   }
-  
-  accesslist_path = "./triggers/anonmessage/access"
+
+  FileUtils.mkdir_p("./#{ch.dirname}/anonmessage")
+  accesslist_path = "./#{ch.dirname}/anonmessage/access"
+  File.touch(accesslist_path)
 
   t.act { |info|
     who = CBUtils.condense_name(info[:who])
