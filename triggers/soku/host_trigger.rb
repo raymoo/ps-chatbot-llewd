@@ -16,7 +16,7 @@ Trigger.new do |t|
     hoster = CBUtils.condense_name(info[:who])
     HostStruct = Struct.new(:hoster, :time, :address)
     hostinfo = HostStruct.new(info[:who], Time.now, info[:result])
-    $hosters[hoster] = [hostinfo]
+    $hosters[hoster] = hostinfo
 
     info[:respond].call(hostinfo[:hoster] + " is hosting at " + hostinfo[:address])
   end
