@@ -308,6 +308,7 @@ class ChatHandler
     t = get_by_id(id)
     return if !t
     t[:off] = !on
+    return true
   end
   
   # convenience methods
