@@ -19,12 +19,12 @@ Trigger.new do |t|
   t.match do |info|
     info[:print] = info[:where] == 'c' && info[:what] == '!counter'
 
-    counter = info[:where] == 'c' && info[:what].scan(sao_reg).any? && CBUtils.condense_name(info[:who]) != CBUtils.condense_name(USERNAME)
-    counter ||= info[:where] == 'c' && info[:what].scan(db_reg).any? && CBUtils.condense_name(info[:who]) != CBUtils.condense_name(USERNAME)
-    counter ||= info[:where] == 'c' && info[:what].scan(nar_reg).any? && CBUtils.condense_name(info[:who]) != CBUtils.condense_name(USERNAME)
-    counter ||= info[:where] == 'c' && info[:what].scan(ft_reg).any? && CBUtils.condense_name(info[:who]) != CBUtils.condense_name(USERNAME)
-    counter ||= info[:where] == 'c' && info[:what].scan(snk_reg).any? && CBUtils.condense_name(info[:who]) != CBUtils.condense_name(USERNAME)
-    counter ||= info[:where] == 'c' && info[:what].scan(op_reg).any? && CBUtils.condense_name(info[:who]) != CBUtils.condense_name(USERNAME)
+    counter = info[:where] == 'c' && info[:what].scan(sao_reg).any? && CBUtils.condense_name(info[:who]) != CBUtils.condense_name(ch.name)
+    counter ||= info[:where] == 'c' && info[:what].scan(db_reg).any? && CBUtils.condense_name(info[:who]) != CBUtils.condense_name(ch.name)
+    counter ||= info[:where] == 'c' && info[:what].scan(nar_reg).any? && CBUtils.condense_name(info[:who]) != CBUtils.condense_name(ch.name)
+    counter ||= info[:where] == 'c' && info[:what].scan(ft_reg).any? && CBUtils.condense_name(info[:who]) != CBUtils.condense_name(ch.name)
+    counter ||= info[:where] == 'c' && info[:what].scan(snk_reg).any? && CBUtils.condense_name(info[:who]) != CBUtils.condense_name(ch.name)
+    counter ||= info[:where] == 'c' && info[:what].scan(op_reg).any? && CBUtils.condense_name(info[:who]) != CBUtils.condense_name(ch.name)
 
     info[:print] || counter
   end
