@@ -10,7 +10,6 @@ Trigger.new do |t|
     (info[:where] == 'c') && info[:what]
   }
   
-  t[:id] = "speaker"
   $speakable = Hash.new
   $speakable.default = true
   FileUtils.mkdir_p("./#{ch.dirname}/speaker")
