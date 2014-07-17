@@ -299,6 +299,10 @@ class ChatHandler
       
     end
   end
+
+  def get_by_id(id)
+    @triggers.find { |t| t[:id] == id }
+  end
   
   def turn_by_id id, on
     t = get_by_id(id)
