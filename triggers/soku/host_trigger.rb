@@ -1,4 +1,5 @@
 $hosters = Hash.new
+HostStruct = Struct.new(:hoster, :time, :address)
 
 Trigger.new do |t|
   t[:id] = "host"
@@ -14,7 +15,6 @@ Trigger.new do |t|
     (info[:all][2][0] =~ /[+%@#]/) or next
 
     hoster = CBUtils.condense_name(info[:who])
-    HostStruct = Struct.new(:hoster, :time, :address)
     hostinfo = HostStruct.new(info[:who], Time.now, info[:result])
     $hosters[hoster] = hostinfo
 
