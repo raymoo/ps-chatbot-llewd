@@ -34,7 +34,7 @@ Trigger.new do |t|
 
   FileUtils.mkdir_p("./#{ch.dirname}/anonmessage")
   accesslist_path = "./#{ch.dirname}/anonmessage/access"
-  File.touch(accesslist_path)
+  FileUtils.touch(accesslist_path)
 
   t.act { |info|
     who = CBUtils.condense_name(info[:who])
