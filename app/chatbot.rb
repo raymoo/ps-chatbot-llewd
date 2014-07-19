@@ -120,7 +120,10 @@ class Chatbot
               puts "#{@id} Joining room #{r}."
               ws.send("|/join #{r}")
             end
-            
+
+            # set avatar
+            ws.send("|/avatar " + @avatar.to_s)
+
             start_console(ws) if @console_option
           end
           
