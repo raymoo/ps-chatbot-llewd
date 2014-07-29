@@ -72,8 +72,8 @@ Trigger.new do |t|
     info[:what][0..6] == '!suck'
   }
   
-
-  dickspath = './triggers/suck/suck'
+  dickspath = "./#{ch.dirname}/suck"
+  FileUtils.mkdir_p(dickspath)
   t.act { |info|
 
 
