@@ -70,7 +70,10 @@ Trigger.new do |t|
   }
   
 
-  fetishstatspath = './triggers/fetishtracker/stats'
+  fetishstatspath = "./#{ch.dirname}/fetish/stats"
+
+  FileUtils.mkdir_p(fetishstatspath)
+
   t.act { |info|
 
     info[:where] == "pm" or (info[:where] == "c" and t[:lastused] + t[:cooldown] < Time.now and t[:lastused] = Time.now) or next
@@ -80,9 +83,10 @@ Trigger.new do |t|
       next
     end 
 
-
+    FileUtils.touch("./#{ch.dirname}/fetish/list")
     
-    fetishes = File.read('./triggers/fetishtracker/list').split(' ')
+    fetishes = File.read("./#{ch.dirname}/fetish/list").split(' ')
+
     # if those checks pass
     
     args = info[:result].split(' ')

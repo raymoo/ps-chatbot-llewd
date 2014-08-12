@@ -39,13 +39,17 @@ Trigger.new do |t|
     info[:what].downcase == '!fetlist'
   }
   
-  stats_path = './triggers/fetishtracker/stats'
-  FileUtils.touch(stats_path)
+  fetishstatspath = "./#{ch.dirname}/fetish/stats"
+
+  FileUtils.mkdir_p(fetishstatspath)
+
   uploader = CBUtils::HasteUploader.new
   
   t.act do |info|
     
-    stats = File.read('./triggers/fetishtracker/list').split(' ')
+    FileUtils.touch("./#{ch.dirname}/fetish/list")
+
+    stats = File.read("./#{ch.dirname}/fetish/list").split(' ')
     stats_text = "Fetish|ban|warning|no warning|declare|love\n"
     
     stats.each {|fetish|
