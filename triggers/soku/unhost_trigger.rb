@@ -7,7 +7,7 @@ Trigger.new do |t|
   
   t.act do |info|
 
-    (info[:fullwho][1] =~ /[+%@#]/) or next
+    (info[:fullwho][0] =~ /[+%@#]/) or next
 
     hoster = CBUtils.condense_name(info[:who])
     hostinfo = $hosters[hoster]
