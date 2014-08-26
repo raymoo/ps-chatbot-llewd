@@ -240,7 +240,7 @@ class ChatHandler
         
         o_callback = 
           case m_info[:where].downcase
-          when 'c', 'j', 'n', 'l', 'tournament'
+          when 'c:', 'j', 'n', 'l', 'tournament'
             proc do |mtext| queue_message(m_info[:ws], "#{m_info[:room]}|#{mtext}") end
           when 'pm'
             proc do |mtext| queue_message(m_info[:ws], "|/pm #{m_info[:who]},#{mtext}") end
@@ -282,7 +282,7 @@ class ChatHandler
     
     
     # Log any chat messages
-    if m_info[:where] == 'c'
+    if m_info[:where] == 'c:'
       logger = @chatloggers[m_info[:room]]
       if !logger
         logger = @chatloggers[m_info[:room]] = Logger.new("./#{@dirname}/logs/chat/#{m_info[:room]}.log", 'monthly')
