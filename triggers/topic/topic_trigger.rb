@@ -37,7 +37,7 @@ Trigger.new do |t|
     t[:lastused] + t[:cooldown] < Time.now or next
     t[:lastused] = Time.now
     
-    if info[:what].size > 7 && ($voiceperm || !(info[:fullwho][0] == '+'))
+    if info[:what].size > 7 && ($voiceperm || !(info[:fullwho][1] == '+'))
       t[:topic][info[:room]] = info[:what][7..-1]
     end
 

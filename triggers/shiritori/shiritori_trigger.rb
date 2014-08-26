@@ -45,7 +45,7 @@ Trigger.new do |t|
       next
     end
        
-    if args[0] == 'start' && !game && (info[:fullwho][0] =~ /[@#]/) then
+    if args[0] == 'start' && !game && (info[:fullwho][1] =~ /[@#]/) then
       game = true
       info[:respond].call("A new game of shiritori is starting. Type '!srtr join' to join.")
       next
@@ -79,7 +79,7 @@ Trigger.new do |t|
       next
     end
     
-    if args[0] == 'end' && game && (info[:fullwho][0] =~ /[@#]/) then
+    if args[0] == 'end' && game && (info[:fullwho][1] =~ /[@#]/) then
       game = false
       players = Array.new
       used = Array.new
