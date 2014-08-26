@@ -12,7 +12,7 @@ Trigger.new do |t|
   
   t.act do |info|
 
-    (info[:all][2][0] =~ /[+%@#]/) or next
+    (info[:fullwho][0] =~ /[+%@#]/) or next
 
     hoster = CBUtils.condense_name(info[:who])
     hostinfo = HostStruct.new(info[:who], Time.now, info[:result])

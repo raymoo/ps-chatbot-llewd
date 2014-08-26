@@ -32,12 +32,12 @@ Trigger.new do |t|
   
   t.act do |info|
 
-    (info[:all][2][0] =~ /[+%@#]/) or next
+    (info[:fullwho][1] =~ /[+%@#]/) or next
 
     t[:lastused] + t[:cooldown] < Time.now or next
     t[:lastused] = Time.now
     
-    if info[:what].size > 7 && ($voiceperm || !(info[:all][2][0] == '+'))
+    if info[:what].size > 7 && ($voiceperm || !(info[:fullwho][0] == '+'))
       t[:topic][info[:room]] = info[:what][7..-1]
     end
 

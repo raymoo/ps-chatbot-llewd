@@ -52,7 +52,7 @@ class ChatHandler
   end
   
   def initialize_usage_stats
-    @usage_stats = {"c" => {}, "s" => {}, "pm" => {}}
+    @usage_stats = {"c:" => {}, "s" => {}, "pm" => {}}
     
     @usage_path = "./#{@dirname}/logs/usagestats.txt"
     

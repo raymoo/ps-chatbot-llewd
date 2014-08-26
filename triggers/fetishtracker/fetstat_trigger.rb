@@ -55,7 +55,7 @@ Trigger.new do |t|
     info[:where] == "pm" or (info[:where] == "c" and t[:lastused] + t[:cooldown] < Time.now and t[:lastused] = Time.now) or next
     
     
-    if info[:where] == 'c' && !(info[:all][2][0] =~ /[%@#]/)
+    if info[:where] == 'c' && !(info[:fullwho][0] =~ /[%@#]/)
       info[:respond].call('To broadcast the full results of this command in a room you must be a driver or higher. Try pming')
       next
     end 

@@ -53,7 +53,7 @@ Trigger.new do |t|
     stats_text = "Fetish|ban|warning|no warning|declare|love\n"
     
     stats.each {|fetish|
-      stats_text += fetish + "|" + count_stats(fetish, stats_path).join("|") + "\n"
+      stats_text += fetish + "|" + count_stats(fetish, fetishstatspath).join("|") + "\n"
     }
   
     uploader.upload(stats_text) do |url|
