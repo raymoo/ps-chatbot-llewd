@@ -152,7 +152,7 @@ class Chatbot
           
           
           
-        when 'c:', 'pm', 'j', 'n', 'l', 'users', 'tournament'
+        when 'c', 'c:', 'pm', 'j', 'n', 'l', 'users', 'tournament'
           @ch.handle(message, ws)
         when 'updatechallenges'
           @bh.handle_challenge(message, ws)
