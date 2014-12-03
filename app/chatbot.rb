@@ -184,7 +184,6 @@ class Chatbot
     end
   end
 
-<<<<<<< HEAD
   def start_console ws
     @console = Console.new(nil, @ch)
     puts 'Started console'
@@ -192,14 +191,11 @@ class Chatbot
     @console.start_loop
   end
   
-=======
-
   # Sets the join time for a room
   def update_room_time room, time
     @room_times[room] = time
   end
               
->>>>>>> timestamp
   def exit_gracefully(&callback)
     @ch.exit_gracefully(&callback)
   end
