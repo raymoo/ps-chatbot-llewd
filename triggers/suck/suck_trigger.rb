@@ -69,7 +69,6 @@ Trigger.new do |t|
   
   t.match { |info|
     # checks
-    info[:fullwho][0] =~ /[+%@#]/ &&
     info[:what][0..6] == '!suck'
   }
   
@@ -77,6 +76,7 @@ Trigger.new do |t|
   FileUtils.mkdir_p(dickspath)
   t.act { |info|
 
+    (info[:fullwho][0] =~ /[+%@#]/) or next
 
     if info[:where] == "pm"
       info[:respond].call("This command must be done in public")
