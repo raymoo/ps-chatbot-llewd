@@ -47,6 +47,8 @@ class Chatbot
     if !@rooms.is_a? Array
       @rooms = [@rooms]
     end
+
+    @room_times = Hash.new
     
     @server = (opts[:server] || PS_URL)
     
@@ -134,7 +136,7 @@ class Chatbot
           # don't bother understanding the next line, it just takes the data PS sends for formats and
           # changes it into a list of formats
           
-          $battle_formats = ('|' + data.gsub(/[,#]/, '')).gsub(/\|\d\|[^|]+\|/, '').split('|').map { |f| CBUtils.condense_name(f) }
+          $battle_formats = ('|' + data.gsub(/[,#]/, '')).gsub(/\|\d\|[^|]+/, '').split('|').map { |f| CBUtils.condense_name(f) }
         when 'updateuser'
           if CBUtils.condense_name(message[2]) == CBUtils.condense_name(@name)
             puts "#{@id}: Succesfully logged in!"
@@ -152,15 +154,24 @@ class Chatbot
           
           
           
-        when 'c', 'c:', 'pm', 'j', 'n', 'l', 'users', 'tournament'
+        when 'c', 'pm', 'j', 'n', 'l', 'users', 'tournament'
           @ch.handle(message, ws)
+        when 'c:'
+          curTime = Integer(message[2])
+          if (curTime == nil || curTime > @room_times[message[0][1..-2]])
+            @ch.handle(message, ws)
+          end
         when 'updatechallenges'
           @bh.handle_challenge(message, ws)
+        when ':'
+          update_room_time(message[0][1..-2], Integer(message[2]))
         end
       end
       
     end
 
+
+              
     ws.on :close do |event|
       puts "#{@id}: connection closed. code=#{event.code}, reason=#{event.reason}"
       @connected = false
@@ -180,6 +191,11 @@ class Chatbot
     @console.start_loop
   end
   
+  # Sets the join time for a room
+  def update_room_time room, time
+    @room_times[room] = time
+  end
+              
   def exit_gracefully(&callback)
     @ch.exit_gracefully(&callback)
   end
