@@ -69,6 +69,7 @@ Trigger.new do |t|
   
   t.match { |info|
     # checks
+    info[:fullwho][0] =~ /[+%@#]/ &&
     info[:what][0..6] == '!suck'
   }
   
