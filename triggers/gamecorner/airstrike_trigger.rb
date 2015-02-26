@@ -12,6 +12,10 @@ Trigger.new do |t|
   end
   
   t.act do |info|
+
+    # Only voice +
+    (info[:fullwho][0] =~ /[+%@#]/) or next
+
     killstrings = File.read('./triggers/gamecorner/list').split("\n")
 
 
