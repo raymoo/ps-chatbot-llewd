@@ -11,7 +11,7 @@ Trigger.new do |t| # battles
   
   t.match { |info| 
     (info[:where] == 'pm' || info[:room] == 'showderp') &&
-    info[:what].downcase =~ /\A(!((who'?s)? ?ch[aiou]mp|(jo+hn)? ?ce+na+))\z/ && $2
+    info[:what].downcase =~ /\A(\.((who'?s)? ?ch[aiou]mp|(jo+hn)? ?ce+na+))\z/ && $2
   }
   
   t.act do |info|

@@ -13,7 +13,7 @@ Trigger.new do |t|
 
   t.match { |info| 
     (info[:where] == 'pm' || info[:room] == 'showderp') &&
-    info[:what][0..2].downcase == '!fc' && info[:what][3..-1].strip
+    info[:what][0..2].downcase == '.fc' && info[:what][3..-1].strip
   }
   
   FCGetter.load_values

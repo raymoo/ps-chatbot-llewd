@@ -5,8 +5,8 @@ Trigger.new do |t|
   t[:killcount] = {}
 
   t.match do |info|
-    info[:kill] = info[:what] =~ /\A!shank ([^,]+)\z/ && $1
-    info[:airstrike] = info[:what] =~ /\A!airstrike ([^,]+)\z/ && $1
+    info[:kill] = info[:what] =~ /\A\.shank ([^,]+)\z/ && $1
+    info[:airstrike] = info[:what] =~ /\A\.airstrike ([^,]+)\z/ && $1
 
     info[:kill] or info[:airstrike]
   end

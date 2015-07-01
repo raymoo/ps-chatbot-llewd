@@ -27,7 +27,7 @@ Trigger.new do |t|
   t.match { |info|
     # checks
     info[:where] == 'c' &&
-    info[:what][0..4] == '!srtr' &&
+    info[:what][0..4] == '\.srtr' &&
     info[:what][5..-1].strip
   }
   
@@ -47,7 +47,7 @@ Trigger.new do |t|
        
     if args[0] == 'start' && !game && (info[:fullwho][0] =~ /[@#]/) then
       game = true
-      info[:respond].call("A new game of shiritori is starting. Type '!srtr join' to join.")
+      info[:respond].call("A new game of shiritori is starting. Type '\.srtr join' to join.")
       next
     end
     

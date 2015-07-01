@@ -27,7 +27,7 @@ Trigger.new do |t|
   t.match { |info|
     # checks
     info[:where] == 'pm' &&
-    info[:what][0..4] == '!mess' &&
+    info[:what][0..4] == '.mess' &&
     info[:what].size > 5 &&
     info[:what][5..-1].strip
   }
