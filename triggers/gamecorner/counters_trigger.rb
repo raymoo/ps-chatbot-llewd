@@ -17,7 +17,7 @@ Trigger.new do |t|
   op_reg = /\bone\spiece\b/i
 
   t.match do |info|
-    info[:print] = info[:where] == 'c' && info[:what] == '\.counter'
+    info[:print] = info[:where] == 'c' && info[:what] == '.counter'
 
     counter = info[:where] == 'c' && info[:what].scan(sao_reg).any? && CBUtils.condense_name(info[:who]) != CBUtils.condense_name(ch.name)
     counter ||= info[:where] == 'c' && info[:what].scan(db_reg).any? && CBUtils.condense_name(info[:who]) != CBUtils.condense_name(ch.name)

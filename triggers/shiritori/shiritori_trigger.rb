@@ -27,7 +27,7 @@ Trigger.new do |t|
   t.match { |info|
     # checks
     info[:where] == 'c' &&
-    info[:what][0..4] == '\.srtr' &&
+    info[:what][0..4] == '.srtr' &&
     info[:what][5..-1].strip
   }
   

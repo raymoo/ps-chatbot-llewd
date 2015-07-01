@@ -69,7 +69,7 @@ Trigger.new do |t|
   
   t.match { |info|
     # checks
-    info[:what][0..6] == '\.suck'
+    info[:what][0..6] == '.suck'
   }
   
   dickspath = "./#{ch.dirname}/suck"

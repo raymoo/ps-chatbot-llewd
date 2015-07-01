@@ -17,7 +17,7 @@
 
 Trigger.new do |t|
   t.match { |info|
-    info[:what] == '\.stoggle' &&
+    info[:what] == '.stoggle' &&
     info[:where] == 'c'
   }
 
