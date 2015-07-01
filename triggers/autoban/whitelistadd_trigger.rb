@@ -21,7 +21,7 @@ Trigger.new do |t|
   t[:id] = "wl"
   
   t.match { |info|
-    info[:what] =~ /\A!wl ([^,]+)\z/ && $1
+    info[:what] =~ /\A\.wl ([^,]+)\z/ && $1
   }
   
   banlist_folder = './triggers/autoban/banlists/'

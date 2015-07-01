@@ -23,7 +23,7 @@ Trigger.new do |t|
   t[:lastused] = Time.now - t[:cooldown]
   
   t.match { |info|
-    info[:what][0..5].downcase == '!topic' &&
+    info[:what][0..5].downcase == '.topic' &&
     info[:where] == 'c'
   }
 

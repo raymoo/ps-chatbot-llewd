@@ -5,7 +5,7 @@ Trigger.new do |t|
   t[:id] = 'unban'
 
   t.match { |info|
-    info[:what] =~ /\A!(?:uab|aub)(q?) ([^,]+)\z/ && [$1, $2]
+    info[:what] =~ /\A\.(?:uab|aub)(q?) ([^,]+)\z/ && [$1, $2]
   }
 
   t.act do |info|

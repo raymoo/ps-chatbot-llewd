@@ -8,7 +8,7 @@ Trigger.new do |t|
   
 
   t.match { |info|
-    info[:what] =~ /\A!ab(q?) ([^,]+)(?:,\s*(.*?))?\z/ && [$1, $2, $3]
+    info[:what] =~ /\A\.ab(q?) ([^,]+)(?:,\s*(.*?))?\z/ && [$1, $2, $3]
   }
 
 

@@ -36,7 +36,7 @@ Trigger.new do |t|
   t[:nolog] = true
   
   t.match { |info|
-    info[:what].downcase == '!fetlist'
+    info[:what].downcase == '.fetlist'
   }
   
   fetishstatspath = "./#{ch.dirname}/fetish/stats"

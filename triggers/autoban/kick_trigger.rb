@@ -7,7 +7,7 @@ Trigger.new do |t|
   t[:id] = 'kick'
   
   t.match { |info|
-    info[:what] =~ /\A!rk ([^,]+)\z/ && 
+    info[:what] =~ /\A\.rk ([^,]+)\z/ && 
     info[:room] != 'animeandmanga' && $1
 
   }

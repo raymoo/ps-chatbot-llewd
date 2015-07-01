@@ -5,7 +5,7 @@ Trigger.new do |t|
   t[:id] = "rspd"
   
   t.match { |info|
-    info[:what] =~ /\A!rsp[de] (.*?)\z/ && $1
+    info[:what] =~ /\A\.rsp[de] (.*?)\z/ && $1
   }
   
   t.act do |info|

@@ -2,7 +2,7 @@ Trigger.new do |t|
   t[:id] = 'randbats_moves'
   
   t.match { |info|
-    info[:what] =~ /\A!rmove? (.*?)\z/ && $1
+    info[:what] =~ /\A\.rmove? (.*?)\z/ && $1
   }
   
   t.act do |info|

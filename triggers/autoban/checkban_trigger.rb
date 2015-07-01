@@ -4,7 +4,7 @@ Trigger.new do |t|
   t[:id] = 'checkban'
   
   t.match { |info|
-    info[:what] =~ /\A!cb (.*?)\z/ && $1.split(/,\s*/)
+    info[:what] =~ /\A\.cb (.*?)\z/ && $1.split(/,\s*/)
   }
   
   t.act do |info|

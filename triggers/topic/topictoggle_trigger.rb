@@ -19,7 +19,7 @@ Trigger.new do |t|
   t[:id] = "topictoggle"
   
   t.match { |info|
-    info[:what] == '!ttoggle' &&
+    info[:what] == '.ttoggle' &&
     info[:where] == 'c'
   }
 

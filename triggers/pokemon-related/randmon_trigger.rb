@@ -8,8 +8,8 @@ Trigger.new do |t|
   t[:id] = "rmon"
   
   t.match { |info|
-    (info[:what][0..5] == '!rmon ' && info[:what][6..-1].gsub(/,/, '').split(' ').map(&:strip)) ||
-    (info[:what][0..4] == '!rmon' && []) 
+    (info[:what][0..5] == '.rmon ' && info[:what][6..-1].gsub(/,/, '').split(' ').map(&:strip)) ||
+    (info[:what][0..4] == '.rmon' && []) 
 
   }
   

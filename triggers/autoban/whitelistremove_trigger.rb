@@ -21,7 +21,7 @@ Trigger.new do |t|
   t[:id] = "unban"
   
   t.match { |info|
-    info[:what] =~ /\A!uwl ([^,]+)\z/ && $1
+    info[:what] =~ /\A\.uwl ([^,]+)\z/ && $1
   }
   
   banlist_folder = './triggers/autoban/banlists/'

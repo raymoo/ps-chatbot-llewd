@@ -8,7 +8,7 @@ Trigger.new do |t|
   t[:id] = 'fsym'
   
   t.match { |info|
-    info[:what][0..4] == '!fsym' &&
+    info[:what][0..4] == '.fsym' &&
     t[:who_can_access].index(CBUtils.condense_name(info[:who])) && # necessary guard
     info[:what][6..-1]
   }

@@ -37,7 +37,7 @@ Trigger.new do |t|
 
   t.match { |info|
     # checks
-    info[:what][0..7] == '!fetstat' &&
+    info[:what][0..7] == '.fetstat' &&
     info[:what][8..-1].strip
   }
   
@@ -62,14 +62,14 @@ Trigger.new do |t|
 
     if args.count < 1 || args[0] == "help" || args[0] == 
 "info"
-      result = 'Type "!fetstat <fetishid>" to view stats for a fetish. Available fetish ids are: '
+      result = 'Type ".fetstat <fetishid>" to view stats for a fetish. Available fetish ids are: '
       result += fetishes.join(', ')
       info[:respond].call(result)
       next
     end
 
     if !fetishes.include?(args[0])
-      info[:respond].call("#{args[0]} is not a valid id. Type !fetstat for a list.")
+      info[:respond].call("#{args[0]} is not a valid id. Type .fetstat for a list.")
       next
     end
     

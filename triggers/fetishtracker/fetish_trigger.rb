@@ -65,7 +65,7 @@ Trigger.new do |t|
   
   t.match { |info|
     # checks
-    info[:what][0..6] == '!fetish' &&
+    info[:what][0..6] == '.fetish' &&
     info[:what][7..-1].strip
   }
   
@@ -94,20 +94,20 @@ Trigger.new do |t|
     if args.count != 2
 
       
-      result = 'Pm to me "!fetish <fetishid> <acceptancelevel>" to register your toleration of a fetish. !fetstat <fetishid> will display statistics for that fetish.'
+      result = 'Pm to me ".fetish <fetishid> <acceptancelevel>" to register your toleration of a fetish. !fetstat <fetishid> will display statistics for that fetish.'
       info[:respond].call(result)
       result = 'Available fetish ids are: '
       result += fetishes.join(', ')
       info[:respond].call(result)
       result = 'Levels are: 0-Prohibition 1-Links w/ warning 2-Links w/o warning 3-Declares ok 4-I love it'
       info[:respond].call(result)
-      info[:respond].call('Example: If you would tolerate images with shoes as long as links have warnings, you would pm to me "!fetish shoes 1"')
+      info[:respond].call('Example: If you would tolerate images with shoes as long as links have warnings, you would pm to me ".fetish shoes 1"')
     elsif !is_num?(args[1]) || Integer(args[1]) < 0 || Integer(args[1]) > 4
       
       info[:respond].call('The acceptance level must be an integer from 0-4.')
     elsif !fetishes.include?(args[0])
       
-      info[:respond].call('The fetish id must be one in the list. Type !fetish for a list.')
+      info[:respond].call('The fetish id must be one in the list. Type .fetish for a list.')
     elsif info[:where] == 'c'
     
       info[:respond].call('Please pm your entries to me')
