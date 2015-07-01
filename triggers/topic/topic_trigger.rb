@@ -23,12 +23,12 @@ Trigger.new do |t|
   t[:lastused] = Time.now - t[:cooldown]
   
   t.match { |info|
-    info[:what][0..5].downcase == '.topic' &&
+    info[:what][0..9].downcase == '.roomtopic' &&
     info[:where] == 'c'
   }
 
   t[:topic] = Hash.new
-  t[:topic].default = "Nothing (not even SAO)"
+  t[:topic].default = "Nothing (not even Tokyo Ghoul)"
   
   t.act do |info|
 
@@ -37,8 +37,8 @@ Trigger.new do |t|
     t[:lastused] + t[:cooldown] < Time.now or next
     t[:lastused] = Time.now
     
-    if info[:what].size > 7 && ($voiceperm || !(info[:fullwho][0] == '+'))
-      t[:topic][info[:room]] = info[:what][7..-1]
+    if info[:what].size > 11 && ($voiceperm || !(info[:fullwho][0] == '+'))
+      t[:topic][info[:room]] = info[:what][11..-1]
     end
 
     info[:respond].call("/wall The topic is: " + t[:topic][info[:room]])
