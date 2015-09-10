@@ -23,7 +23,7 @@ Trigger.new do |t|
   t[:lastused] = Time.now - t[:cooldown]
   
   t.match { |info|
-    info[:what][0..9].downcase == '.roomtopic' &&
+    info[:what][0..9].downcase == '.topic' &&
     info[:where] == 'c'
   }
 
@@ -38,7 +38,7 @@ Trigger.new do |t|
     t[:lastused] = Time.now
     
     if info[:what].size > 11 && ($voiceperm || !(info[:fullwho][0] == '+'))
-      t[:topic][info[:room]] = info[:what][11..-1]
+      t[:topic][info[:room]] = info[:what][7..-1]
     end
 
     info[:respond].call("/wall The topic is: " + t[:topic][info[:room]])
